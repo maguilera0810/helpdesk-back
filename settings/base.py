@@ -33,7 +33,6 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
-
 MY_APPS = []
 THIRD_PARTY = []
 
