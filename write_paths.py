@@ -25,18 +25,19 @@ def add_comment_to_files(root_dir, format='.py', ignore_dirs=None):
                 content = f.readlines()
                 if not content:
                     continue
-                print(file_path, end="."*(70 - len(file_path[:-1])))
-                first_line = content[0]
-                f.seek(0, 0)
-                if not first_line.endswith(f"{format}\n"):
-                    f.write(f"{comment} {file_path}\n{''.join(content)}")
-                    print('DONE')
-                elif not first_line.startswith(f"{comment} {file_path}"):
-                    f.write(
+            print(file_path, end="."*(70 - len(file_path[:-1])))
+            first_line = content[0]
+            if not first_line.endswith(f"{format}\n"):
+                with open(file_path, 'w') as f2:
+                    f2.write(f"{comment} {file_path}\n{''.join(content)}")
+                print('DONE')
+            elif not first_line.startswith(f"{comment} {file_path}"):
+                with open(file_path, 'w') as f2:
+                    f2.write(
                         f"{comment} {file_path}\n{''.join(content[1:])}")
-                    print('UPDATED')
-                else:
-                    print('ALREADY')
+                print('UPDATED')
+            else:
+                print('ALREADY')
 
 
 ignore_dirs = ('migrations')
