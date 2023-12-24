@@ -5,7 +5,7 @@ from apps.core.models import AuditModel, PeriodModel, BaseInfoModel
 from utils.enums import TaskPriority, TaskStatus, TaskType
 
 
-class Task(AuditModel, BaseInfoModel):
+class Task(BaseInfoModel, AuditModel):
     """
         Modelo para tareas de mantenimiento
     """
