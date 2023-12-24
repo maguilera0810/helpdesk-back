@@ -19,7 +19,7 @@ class PeriodModel(models.Model):
         abstract = True
 
 
-class Model(models.Model):
+class BaseInfoModel(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
 
