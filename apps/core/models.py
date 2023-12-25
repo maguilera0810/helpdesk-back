@@ -12,8 +12,8 @@ class AuditModel(models.Model):
 
 
 class PeriodModel(models.Model):
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
 
     class Meta:
         abstract = True
