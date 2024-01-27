@@ -22,7 +22,7 @@ class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
                                     null=True, blank=True, verbose_name='Responsible User')
     team = models.ManyToManyField('auth.User',
                                   related_name='assigned_scheduled_tasks')
-    created_by = models.ForeignKey('auth.User', related_name='created_tasks',
+    created_by = models.ForeignKey('auth.User', related_name='created_scheduled_tasks',
                                    on_delete=models.DO_NOTHING, null=True, blank=True)
     recurrence_rule = models.CharField(max_length=255)
     next_run_date = models.DateField()
