@@ -8,4 +8,4 @@ class Profile(models.Model):
     address = models.CharField(max_length=255, blank=True)
     is_available = models.BooleanField(default=True)
     external_code = models.CharField(max_length=50, blank=True)
-    # skills = models.ManyToManyField('authentication.Field')
+    skills = models.ManyToManyField('common.Skill', related_name='profiles')
