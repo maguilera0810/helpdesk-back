@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
 
-from api.base.views import IsAuthenticatedView
+from api.base.views import BaseView
 from apps.authentication.dtos import AuthDTO
 from apps.authentication.models import Profile
 from apps.authentication.serializers import UserSerializer
@@ -10,7 +10,7 @@ from gateways.utmach import UTMACH
 from apps.authentication.serializers import UserSerializer
 
 
-class AuthView(IsAuthenticatedView):
+class AuthView(BaseView):
 
     def login(self, request):
         """
