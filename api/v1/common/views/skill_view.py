@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from api.base.views import IsAuthenticatedView
-from api.v1.common.serializers.skill_serializer import SkillSerializer
 from apps.common.models import Skill
+from apps.common.serializers import SkillSerializer
 
 
 class SkillView(IsAuthenticatedView):
