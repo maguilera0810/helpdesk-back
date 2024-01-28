@@ -1,4 +1,4 @@
-# .\apps\core\models.py
+# .\apps\common\models.py
 from collections.abc import Iterable
 from django.db import models
 
