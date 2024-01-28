@@ -63,8 +63,7 @@ class Request(models.Model):
     """
     requesting_unit = models.ForeignKey('management.RequestingUnit', on_delete=models.CASCADE,
                                         related_name='requests')
-    task = models.ForeignKey('management.Task', on_delete=models.CASCADE,
-                             related_name='requests')
+    task = models.OneToOneField('management.Task', on_delete=models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -72,7 +71,7 @@ class TaskHistory(models.Model):
     """ 
         Modelo para historial de tareas
     """
-    task = models.ForeignKey('management.Task', on_delete=models.CASCADE,
+    task = models.ForeignKey('management.Task', on_delete=models.DO_NOTHING,
                              related_name='history')
     status = models.CharField(max_length=50, choices=TaskStatus.choices)
     changed_at = models.DateTimeField(auto_now_add=True)
@@ -84,6 +83,6 @@ class Report(AuditModel):
     """
         Modelo para informes
     """
-    task = models.ForeignKey('management.Task', on_delete=models.CASCADE,
+    task = models.ForeignKey('management.Task', on_delete=models.DO_NOTHING,
                              related_name='reports')
     content = models.TextField()
