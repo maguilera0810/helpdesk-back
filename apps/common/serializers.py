@@ -1,3 +1,4 @@
+# .\apps\common\serializers.py
 from rest_framework.serializers import ModelSerializer
 
 from apps.common.models import Skill
