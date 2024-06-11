@@ -1,3 +1,4 @@
+# .\resources\decorators\receiver_decorators.py
 from django.dispatch import receiver
 
 

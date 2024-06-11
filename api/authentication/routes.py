@@ -1,4 +1,4 @@
-# .\api\v1\authentication\routes.py
+# .\api\authentication\routes.py
 from django.urls import path
 
 from api.authentication.views.auth_view import AuthView

@@ -1,3 +1,4 @@
+# .\resources\gateways\translation\weblate_gateway.py
 import logging
 import os
 from contextlib import suppress

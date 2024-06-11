@@ -1,3 +1,4 @@
+# .\resources\helpers\file_helper.py
 class FileHelper:
     """
     File helper, class to check some attributes of a file.

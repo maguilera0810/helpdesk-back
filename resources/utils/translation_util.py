@@ -1,3 +1,4 @@
+# .\resources\utils\translation_util.py
 from contextlib import suppress
 
 from django.utils.translation import activate, gettext

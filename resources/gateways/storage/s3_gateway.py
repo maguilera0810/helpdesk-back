@@ -1,3 +1,4 @@
+# .\resources\gateways\storage\s3_gateway.py
 import boto3
 from django.conf import settings
 

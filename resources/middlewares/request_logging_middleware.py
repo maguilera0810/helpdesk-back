@@ -1,4 +1,4 @@
-# resources/middleware/request_logging.py
+# .\resources\middlewares\request_logging_middleware.py
 
 import logging
 

@@ -1,3 +1,4 @@
+# .\resources\gateways\translation\base_translation_gateway.py
 from abc import ABC, abstractmethod
 
 

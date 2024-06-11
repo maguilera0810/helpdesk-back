@@ -1,4 +1,4 @@
-# .\api\v1\common\routes.py
+# .\api\common\routes.py
 from django.urls import path
 
 from api.common.views.skill_view import SkillView

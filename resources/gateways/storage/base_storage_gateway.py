@@ -1,3 +1,4 @@
+# .\resources\gateways\storage\base_storage_gateway.py
 from abc import ABC, abstractmethod
 
 

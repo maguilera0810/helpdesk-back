@@ -1,3 +1,4 @@
+# .\resources\factories\translation_factory.py
 from django.conf import settings
 
 from resources.gateways.translation import BaseTranslationGateway, WeblateGateway

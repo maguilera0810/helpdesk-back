@@ -1,3 +1,4 @@
+# .\resources\factories\storage_factory.py
 from django.conf import settings
 
 from resources.gateways.storage import BaseStorageGateway, S3Gateway

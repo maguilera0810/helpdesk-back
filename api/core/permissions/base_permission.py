@@ -1,3 +1,4 @@
+# .\api\core\permissions\base_permission.py
 from django.conf import settings
 from rest_framework.permissions import BasePermission
 

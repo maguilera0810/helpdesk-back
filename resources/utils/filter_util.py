@@ -1,3 +1,4 @@
+# .\resources\utils\filter_util.py
 class FilterUtil:
     @staticmethod
     def get_list_filters(data: dict[str, str]) -> dict[dict]:
