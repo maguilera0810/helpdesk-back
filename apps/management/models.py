@@ -1,4 +1,6 @@
 # .\apps\management\models.py
+from typing import Union
+
 from django.db import models
 
 from apps.core.models import AuditModel, BaseInfoModel, PeriodModel
@@ -86,3 +88,23 @@ class Report(AuditModel):
     task = models.ForeignKey('management.Task', on_delete=models.DO_NOTHING,
                              related_name='reports')
     content = models.TextField()
+
+
+MODELS = [
+    MaintenancePlan,
+    ScheduledTask,
+    Task,
+    RequestingUnit,
+    Request,
+    TaskHistory,
+    Report,
+]
+MODELS_TYPES = Union[
+    MaintenancePlan,
+    ScheduledTask,
+    Task,
+    RequestingUnit,
+    Request,
+    TaskHistory,
+    Report,
+]
