@@ -2,5 +2,7 @@
 from django.urls import include, path
 
 urlpatterns = [
-    path('v1/', include('api.v1.routes')),
+    path("auth/", include("api.authentication.routes")),
+    path("common/", include("api.common.routes")),
+    path("management/", include("api.management.routes")),
 ]
