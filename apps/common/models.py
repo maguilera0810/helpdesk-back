@@ -23,6 +23,6 @@ class Skill(models.Model):
 MODELS = [
     Skill,
 ]
-MODELS_TYPES = Union[
+MODEL_TYPES = Union[
     Skill,
 ]

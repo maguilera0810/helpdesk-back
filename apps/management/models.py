@@ -99,7 +99,7 @@ MODELS = [
     TaskHistory,
     Report,
 ]
-MODELS_TYPES = Union[
+MODEL_TYPES = Union[
     MaintenancePlan,
     ScheduledTask,
     Task,

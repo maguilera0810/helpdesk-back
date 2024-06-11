@@ -17,6 +17,6 @@ class Profile(models.Model):
 MODELS = [
     Profile,
 ]
-MODELS_TYPES = Union[
+MODEL_TYPES = Union[
     Profile,
 ]
