@@ -10,4 +10,4 @@ class AuthDTO:
     pasword: str
     """
     email: str
-    pasword: str
+    password: str
