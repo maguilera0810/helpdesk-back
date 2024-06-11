@@ -39,10 +39,10 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 CUSTOM_APPS = [
-    'authentication',
-    'common',
-    'core',
-    'management',
+    'apps.authentication',
+    'apps.common',
+    'apps.core',
+    'apps.management',
 ]
 
 THIRD_PARTY_APPS = []
