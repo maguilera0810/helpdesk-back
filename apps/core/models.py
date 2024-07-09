@@ -5,7 +5,6 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
-from resources.enums import StoragePathEnum
 
 ENV = settings.ENV
 
@@ -15,7 +14,7 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class AuditModel(models.Model):
+class AuditModel(BaseModel):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -40,7 +39,7 @@ class AuditModel(models.Model):
         return result
 
 
-class PeriodModel(models.Model):
+class PeriodModel(BaseModel):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
 
@@ -48,7 +47,7 @@ class PeriodModel(models.Model):
         abstract = True
 
 
-class BaseInfoModel(models.Model):
+class BaseInfoModel(BaseModel):
     title = models.CharField(max_length=255)
     description = models.TextField()
 
