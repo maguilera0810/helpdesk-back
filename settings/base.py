@@ -26,7 +26,7 @@ sys.path.insert(0, str(APPS_DIR))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ze!m2^qkz278dn&gp@y9z3i%n8%(-i5r+#@bmqr=q7+mnd037t'
-
+ENV = "local"
 
 # Application definition
 
@@ -138,3 +138,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 TOKEN_AUTHENTICATION = False
+
+
+API_KEYS = ["123456", "qwerty"]
