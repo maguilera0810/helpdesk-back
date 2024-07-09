@@ -5,16 +5,17 @@ from typing import Optional
 from django.db import transaction
 
 from api.core.services.base_service import BaseService
-from apps import MODEL_TYPES
-from resources.gateways.storage import BaseStorageGateway
-from resources.gateways.translation import BaseTranslationGateway
+from apps.authentication.models import MODEL_TYPES as AUTH_MODEL_TYPES
+from apps.common.models import MODEL_TYPES as COMMON_MODEL_TYPES
+from apps.management.models import MODEL_TYPES as MANAGE_MODEL_TYPES
 from resources.helpers.file_helper import FileHelper
+
+MODEL_TYPES = AUTH_MODEL_TYPES | COMMON_MODEL_TYPES | MANAGE_MODEL_TYPES
 
 
 class BaseCRUDService(BaseService):
     model: Optional[MODEL_TYPES] = None
-    storage: Optional[BaseStorageGateway] = None
-    translation: Optional[BaseTranslationGateway] = None
+    storage = None
 
     @classmethod
     def get_one(cls, id: int):
@@ -65,19 +66,3 @@ class BaseCRUDService(BaseService):
         setattr(instance, attr, f"/{path}")
         instance.save()
         return instance
-
-    @classmethod
-    def set_translation_keys(
-        cls,
-        instance: MODEL_TYPES = None,
-        id: int = None,
-        keys: list[str] = ["translation_key"],
-    ):
-        if not getattr(cls, "translation", None):
-            return
-        instance = instance or cls.get_one(id=id)
-        if not instance:
-            return
-        for key in keys:
-            if value := getattr(instance, key, None):
-                cls.translation.add_key(key=value, translation=value)
