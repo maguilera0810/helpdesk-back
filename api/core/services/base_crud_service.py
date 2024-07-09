@@ -48,21 +48,3 @@ class BaseCRUDService(BaseService):
             roulettes = [cls.model(**data) for data in data_list]
             cls.model.objects.bulk_create(roulettes)
             return roulettes
-
-    @classmethod
-    def update_files(cls, files, instance: MODEL_TYPES = None, id: int = None):
-        return instance
-
-    @classmethod
-    def save_file(cls, file, instance: MODEL_TYPES, attr: str):
-        if not all((hasattr(instance, attr), hasattr(instance, "get_path_storage"), getattr(cls, "storage", None))):
-            return
-        fh = FileHelper(file=file)
-        if not (path := instance.get_path_storage(sub_key=f"_{attr}")):
-            return
-        path = path.replace(f"<{instance.get_key()}_id>", str(
-            instance.id)).replace("<format>", fh.get_format())
-        cls.storage.upload_file(file=file, key=path)
-        setattr(instance, attr, f"/{path}")
-        instance.save()
-        return instance
