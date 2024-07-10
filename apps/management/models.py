@@ -4,7 +4,7 @@ from typing import Union
 from django.db import models
 
 from apps.core.models import AuditModel, BaseInfoModel, PeriodModel
-from utils.enums import TaskPriority, TaskStatus, TaskType
+from resources.enums import TaskPriority, TaskStatus, TaskType
 
 
 class MaintenancePlan(BaseInfoModel, PeriodModel):
