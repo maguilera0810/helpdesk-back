@@ -4,7 +4,7 @@ from typing import Union
 from django.db import models
 
 from apps.core.models import AuditModel, BaseInfoModel, PeriodModel
-from resources.enums import TaskPriority, TaskStatus, TaskType
+from resources.enums import TaskPriorityEnum, TaskStatusEnum, TaskTypeEnum
 
 
 class MaintenancePlan(BaseInfoModel, PeriodModel):
@@ -18,8 +18,8 @@ class MaintenancePlan(BaseInfoModel, PeriodModel):
 class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
     maintenance_plan = models.ForeignKey('management.MaintenancePlan', related_name='scheduled_tasks',
                                          on_delete=models.DO_NOTHING, null=False, blank=False)
-    priority = models.CharField(max_length=50, choices=TaskPriority.choices,
-                                default=TaskPriority.LOWEST)
+    priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
+                                default=TaskPriorityEnum.lowest)
     responsible = models.ForeignKey('auth.User', related_name='responsible_scheduled_tasks', on_delete=models.DO_NOTHING,
                                     null=True, blank=True, verbose_name='Responsible User')
     team = models.ManyToManyField('auth.User',
@@ -34,12 +34,12 @@ class Task(BaseInfoModel, AuditModel):
     """
         Modelo para tareas de mantenimiento
     """
-    type = models.CharField(max_length=50, choices=TaskType.choices,
-                            default=TaskType.PREVENTIVE)
-    status = models.CharField(max_length=50, choices=TaskStatus.choices,
-                              default=TaskStatus.PENDING)
-    priority = models.CharField(max_length=50, choices=TaskPriority.choices,
-                                default=TaskPriority.LOWEST)
+    type = models.CharField(max_length=50, choices=TaskTypeEnum.choices,
+                            default=TaskTypeEnum.preventive)
+    status = models.CharField(max_length=50, choices=TaskStatusEnum.choices,
+                              default=TaskStatusEnum.pending)
+    priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
+                                default=TaskPriorityEnum.lowest)
     responsible = models.ForeignKey('auth.User', related_name='responsible_tasks', on_delete=models.DO_NOTHING,
                                     null=True, blank=True, verbose_name='Responsible User')
     team = models.ManyToManyField('auth.User', related_name='assigned_tasks')
@@ -75,7 +75,7 @@ class TaskHistory(models.Model):
     """
     task = models.ForeignKey('management.Task', on_delete=models.DO_NOTHING,
                              related_name='history')
-    status = models.CharField(max_length=50, choices=TaskStatus.choices)
+    status = models.CharField(max_length=50, choices=TaskStatusEnum.choices)
     changed_at = models.DateTimeField(auto_now_add=True)
     changed_by = models.ForeignKey('auth.User', on_delete=models.DO_NOTHING,
                                    related_name='task_changes')
