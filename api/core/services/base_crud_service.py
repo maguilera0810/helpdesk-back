@@ -39,12 +39,3 @@ class BaseCRUDService(BaseService):
     def delete_all(cls, incl_filters: dict = None, excl_filters: dict = None):
         cls.get_all(incl_filters=incl_filters,
                     excl_filters=excl_filters).delete()
-
-    @classmethod
-    def create_multiple(cls, data_list: list[dict], delete_data: bool = False):
-        with transaction.atomic():
-            if delete_data:
-                cls.delete_all()
-            roulettes = [cls.model(**data) for data in data_list]
-            cls.model.objects.bulk_create(roulettes)
-            return roulettes
