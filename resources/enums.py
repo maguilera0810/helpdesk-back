@@ -25,3 +25,7 @@ class TaskTypeEnum(TextChoices):
 class DocumentTypeEnum(TextChoices):
     id_card = "id_card", _("id_card")
     passport = "passport", _("passport")
+
+
+class AuthErrorEnum(TextChoices):
+    user_already_exist = "user_already_exist", _("user_already_exist")
