@@ -8,7 +8,7 @@ from resources.enums import DocumentTypeEnum
 class Profile(models.Model):
 
     user = models.OneToOneField("auth.User", on_delete=models.DO_NOTHING)
-    phone_number = models.CharField(max_length=15, blank=True)
+    phone = models.CharField(max_length=15, blank=True)
     address = models.CharField(max_length=255, blank=True)
     document_type = models.CharField(max_length=10, blank=False,
                                      choices=DocumentTypeEnum.choices)
