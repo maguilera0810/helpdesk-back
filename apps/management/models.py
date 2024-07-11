@@ -19,7 +19,7 @@ class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
     maintenance_plan = models.ForeignKey('management.MaintenancePlan', related_name='scheduled_tasks',
                                          on_delete=models.DO_NOTHING, null=False, blank=False)
     priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
-                                default=TaskPriorityEnum.lowest)
+                                default=TaskPriorityEnum.MEDIUM)
     responsible = models.ForeignKey('auth.User', related_name='responsible_scheduled_tasks', on_delete=models.DO_NOTHING,
                                     null=True, blank=True, verbose_name='Responsible User')
     team = models.ManyToManyField('auth.User',
@@ -35,11 +35,11 @@ class Task(BaseInfoModel, AuditModel):
         Modelo para tareas de mantenimiento
     """
     type = models.CharField(max_length=50, choices=TaskTypeEnum.choices,
-                            default=TaskTypeEnum.preventive)
+                            default=TaskTypeEnum.PREVENTIVE)
     status = models.CharField(max_length=50, choices=TaskStatusEnum.choices,
-                              default=TaskStatusEnum.pending)
+                              default=TaskStatusEnum.PENDING)
     priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
-                                default=TaskPriorityEnum.lowest)
+                                default=TaskPriorityEnum.MEDIUM)
     responsible = models.ForeignKey('auth.User', related_name='responsible_tasks', on_delete=models.DO_NOTHING,
                                     null=True, blank=True, verbose_name='Responsible User')
     team = models.ManyToManyField('auth.User', related_name='assigned_tasks')

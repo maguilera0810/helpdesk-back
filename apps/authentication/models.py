@@ -15,7 +15,6 @@ class Profile(models.Model):
     document = models.CharField(max_length=15, blank=False,
                                 unique=True, db_index=True)
     is_available = models.BooleanField(default=True)
-    external_code = models.CharField(max_length=50, blank=True, unique=True)
 
 
 MODELS = [
