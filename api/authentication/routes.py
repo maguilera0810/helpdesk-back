@@ -13,7 +13,7 @@ METHODS_FILE = {"put": "update_files"}
 urlpatterns = [
     # ADMIN USER
     path("admin-user/",
-         AuthAdminView.as_view({**METHODS}), name="admin-user-id"),
+         AuthAdminView.as_view({**METHODS}), name="admin_user"),
     path("admin-user/<int:id>/",
          AuthAdminView.as_view({**METHODS_ID}), name="admin_user_id"),
     # USER
