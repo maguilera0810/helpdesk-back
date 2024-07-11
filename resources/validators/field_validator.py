@@ -20,7 +20,7 @@ class FieldValidator:
     def validate_email(cls, email: str):
         pattern = re.compile( r'^[\w\.\+\-]+@[a-zA-Z\d\-]+(\.[a-zA-Z\d\-]+)*\.[a-zA-Z]{2,}$')
         if pattern.match(email):
-            return True, "The email is valid"
+            return True, ValidatorMsgEnum.EMAIL_OK
         return False, ValidatorMsgEnum.EMAIL_ERROR
 
     @classmethod
