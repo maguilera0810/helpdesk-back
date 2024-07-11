@@ -12,7 +12,7 @@ class Plan(BaseInfoModel, PeriodModel):
         Modelo para plan de mantenimiento
     """
     responsible = models.ForeignKey('auth.User', on_delete=models.DO_NOTHING,
-                                    related_name='responsible_maintenance_plan')
+                                    related_name='plans')
 
 
 class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
