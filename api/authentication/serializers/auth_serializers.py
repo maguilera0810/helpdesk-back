@@ -15,8 +15,7 @@ class ProfilePublicSerializer(serializers.ModelSerializer):
             "document_type",
             "phone",
             "address",
-            "is_available",
-            "external_code")
+            "is_available")
 
 
 class UserPublicSerializer(serializers.ModelSerializer):
