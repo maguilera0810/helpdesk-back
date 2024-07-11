@@ -1,10 +1,9 @@
 # .\api\authentication\serializers\auth_serializers.py
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from apps.authentication.models import Profile
-from apps.common.serializers import SkillSerializer
+from apps.authentication.serializers import ProfileSerializer
 
 
 class ProfilePublicSerializer(serializers.ModelSerializer):
@@ -12,7 +11,6 @@ class ProfilePublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = (
-            "id",
             "document",
             "document_type",
             "phone",
@@ -22,6 +20,31 @@ class ProfilePublicSerializer(serializers.ModelSerializer):
 
 
 class UserPublicSerializer(serializers.ModelSerializer):
+    profile = ProfilePublicSerializer()
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "profile",
+        )
+
+
+class UserAdminSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
+
+    class Meta:
+        model = User
+        exclude = (
+            "password",
+        )
+
+
+class UserAdminListSerializer(serializers.ModelSerializer):
     profile = ProfilePublicSerializer()
 
     class Meta:
