@@ -1,3 +1,4 @@
+# .\api\core\views\base_crud_view.py
 from typing import Optional
 
 from rest_framework import status, viewsets
