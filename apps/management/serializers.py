@@ -1,14 +1,13 @@
 # .\apps\management\serializers.py
 from rest_framework.serializers import ModelSerializer
 
-from apps.management.models import (MaintenancePlan, Report, Request,
-                                    RequestingUnit, ScheduledTask, Task,
-                                    TaskHistory)
+from apps.management.models import (Plan, Report, Request, RequestingUnit,
+                                    ScheduledTask, Task, TaskHistory)
 
 
-class MaintenancePlanSerializer(ModelSerializer):
+class PlanSerializer(ModelSerializer):
     class Meta:
-        model = MaintenancePlan
+        model = Plan
         fields = "__all__"
 
 

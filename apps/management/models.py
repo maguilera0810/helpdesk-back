@@ -7,7 +7,7 @@ from apps.core.models import AuditModel, BaseInfoModel, PeriodModel
 from resources.enums import TaskPriorityEnum, TaskStatusEnum, TaskTypeEnum
 
 
-class MaintenancePlan(BaseInfoModel, PeriodModel):
+class Plan(BaseInfoModel, PeriodModel):
     """
         Modelo para plan de mantenimiento
     """
@@ -16,8 +16,8 @@ class MaintenancePlan(BaseInfoModel, PeriodModel):
 
 
 class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
-    maintenance_plan = models.ForeignKey('management.MaintenancePlan', related_name='scheduled_tasks',
-                                         on_delete=models.DO_NOTHING, null=False, blank=False)
+    plan = models.ForeignKey('management.Plan', related_name='scheduled_tasks',
+                             on_delete=models.DO_NOTHING, null=False, blank=False)
     priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
                                 default=TaskPriorityEnum.MEDIUM)
     responsible = models.ForeignKey('auth.User', related_name='responsible_scheduled_tasks', on_delete=models.DO_NOTHING,
@@ -45,8 +45,8 @@ class Task(BaseInfoModel, AuditModel):
     team = models.ManyToManyField('auth.User', related_name='assigned_tasks')
     created_by = models.ForeignKey('auth.User', related_name='created_tasks',
                                    on_delete=models.DO_NOTHING, null=True, blank=True)
-    maintenance_plan = models.ForeignKey('management.MaintenancePlan', related_name='tasks',
-                                         on_delete=models.DO_NOTHING, null=True, blank=True)
+    plan = models.ForeignKey('management.Plan', related_name='tasks',
+                             on_delete=models.DO_NOTHING, null=True, blank=True)
     scheduled = models.ForeignKey('management.ScheduledTask', on_delete=models.SET_NULL,
                                   related_name='scheduled_tasks', null=True, blank=True)
 
@@ -91,7 +91,7 @@ class Report(AuditModel):
 
 
 MODELS = [
-    MaintenancePlan,
+    Plan,
     ScheduledTask,
     Task,
     RequestingUnit,
@@ -100,7 +100,7 @@ MODELS = [
     Report,
 ]
 MODEL_TYPES = Union[
-    MaintenancePlan,
+    Plan,
     ScheduledTask,
     Task,
     RequestingUnit,
