@@ -11,8 +11,9 @@ class TaskPriorityEnum(TextChoices):
 
 
 class TaskStatusEnum(TextChoices):
-    PENDING = "pending", _("pending")
+    TO_DO = "to_do", _("to_do")
     IN_PROGRESS = "in_progress", _("in_progress")
+    BLOCKED = "blocked", _("blocked")
     COMPLETED = "completed", _("completed")
 
 
