@@ -37,11 +37,11 @@ class Task(BaseInfoModel, AuditModel):
     type = models.CharField(max_length=50, choices=TaskTypeEnum.choices,
                             default=TaskTypeEnum.PREVENTIVE)
     status = models.CharField(max_length=50, choices=TaskStatusEnum.choices,
-                              default=TaskStatusEnum.PENDING)
+                              default=TaskStatusEnum.TO_DO)
     priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
                                 default=TaskPriorityEnum.MEDIUM)
     responsible = models.ForeignKey('auth.User', related_name='responsible_tasks', on_delete=models.DO_NOTHING,
-                                    null=True, blank=True, verbose_name='Responsible User')
+                                    null=True, blank=True)
     team = models.ManyToManyField('auth.User', related_name='assigned_tasks')
     created_by = models.ForeignKey('auth.User', related_name='created_tasks',
                                    on_delete=models.DO_NOTHING, null=True, blank=True)
@@ -49,6 +49,15 @@ class Task(BaseInfoModel, AuditModel):
                              on_delete=models.DO_NOTHING, null=True, blank=True)
     scheduled = models.ForeignKey('management.ScheduledTask', on_delete=models.SET_NULL,
                                   related_name='scheduled_tasks', null=True, blank=True)
+
+
+class TaskComment(AuditModel):
+    task = models.ForeignKey('management.Task', related_name='comments', on_delete=models.CASCADE,
+                             null=True, blank=True)
+    author = models.ForeignKey('auth.User', related_name='comments', on_delete=models.DO_NOTHING,
+                               null=True, blank=True)
+    content = models.TextField(blank=True)
+    files = models.JSONField(default=list)
 
 
 class RequestingUnit(BaseInfoModel):
