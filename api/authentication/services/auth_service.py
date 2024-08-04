@@ -16,12 +16,13 @@ class AuthService(BaseCRUDService):
     @classmethod
     @transaction.atomic
     def create_user(cls, data: AuthDTO):
-        is_valid, errors = FieldValidator.validate_data(email=data.email,
-                                                        phone=data.phone,
-                                                        password=data.password)
-        print(is_valid, errors)
-        if not is_valid:
-            return errors, None
+        # TODO uncomment when development ends
+        # is_valid, errors = FieldValidator.validate_data(email=data.email,
+        #                                                 phone=data.phone,
+        #                                                 password=data.password)
+        # print(is_valid, errors)
+        # if not is_valid:
+        #     return errors, None
         if User.objects.filter(Q(email=data.email) |
                                Q(profile__document=data.document)).exists():
             return [AuthMsgEnum.USER_ALREADY_EXIST], None
