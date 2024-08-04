@@ -91,7 +91,7 @@ class AuthView(ApiKeyPermissionView):
         return Response({"error_code": error})
 
 
-class CustomTokenObtainPairView(BasePermissionView):
+class CustomTokenObtainPairView(ApiKeyPermissionView):
 
     def obtain_pair(self, request):
         serializer = CustomAuthTokenSerializer(data=request.data)
