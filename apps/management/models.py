@@ -1,5 +1,6 @@
 # .\apps\management\models.py
 from typing import Union
+from uuid import uuid4
 
 from django.db import models
 
@@ -19,21 +20,23 @@ class Task(BaseInfoModel, AuditModel):
     """
         Modelo para tareas de mantenimiento
     """
+    code = models.UUIDField(default=uuid4, editable=False)
     type = models.CharField(max_length=50, choices=TaskTypeEnum.choices,
                             default=TaskTypeEnum.PREVENTIVE)
     status = models.CharField(max_length=50, choices=TaskStatusEnum.choices,
                               default=TaskStatusEnum.TO_DO)
     priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
                                 default=TaskPriorityEnum.MEDIUM)
-    responsible = models.ForeignKey('auth.User', related_name='responsible_tasks', on_delete=models.DO_NOTHING,
-                                    null=True, blank=True)
-    team = models.ManyToManyField('auth.User', related_name='assigned_tasks')
-    created_by = models.ForeignKey('auth.User', related_name='created_tasks',
-                                   on_delete=models.DO_NOTHING, null=True, blank=True)
-    plan = models.ForeignKey('management.Plan', related_name='tasks',
-                             on_delete=models.DO_NOTHING, null=True, blank=True)
-    scheduled = models.ForeignKey('management.ScheduledTask', on_delete=models.SET_NULL,
-                                  related_name='scheduled_tasks', null=True, blank=True)
+    created_by = models.ForeignKey("auth.User", related_name="created_tasks",
+                                   on_delete=models.DO_NOTHING, null=False, editable=False)
+    responsible = models.ForeignKey("auth.User", related_name="responsible_tasks", on_delete=models.DO_NOTHING,
+                                    null=False, blank=True)
+    team = models.ManyToManyField("auth.User", related_name="assigned_tasks",
+                                   blank=True)
+    plan = models.ForeignKey("management.Plan", related_name="tasks",
+                             on_delete=models.DO_NOTHING, null=True)
+    scheduled = models.ForeignKey("management.ScheduledTask", on_delete=models.SET_NULL,
+                                  related_name="scheduled_tasks", null=True, blank=True)
 
 
 class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
