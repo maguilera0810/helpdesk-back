@@ -51,6 +51,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "corsheaders",
+    "drf_yasg",
 ]
 # GENERAR PNG DE LOS MODELOS
 # TODO verificar que se debe agregar a las apps
