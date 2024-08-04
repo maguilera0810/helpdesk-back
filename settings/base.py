@@ -52,6 +52,12 @@ THIRD_PARTY_APPS = [
     "rest_framework_simplejwt",
     "corsheaders",
 ]
+# GENERAR PNG DE LOS MODELOS
+# TODO verificar que se debe agregar a las apps
+# winget install graphviz
+# agregar al path C:\Program Files\Graphviz\bin
+# python manage.py graph_models -a -g --dot -o myapp_models.dot
+# dot -Tpng myapp_models.dot -o myapp_models.png
 
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS + THIRD_PARTY_APPS
 
