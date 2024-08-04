@@ -1,10 +1,14 @@
 # .\settings\local.py
 from settings.base import *
 
-DEBUG = True
+DEBUG = config("DEBUG", cast=bool, default=True)
 
-ALLOWED_HOSTS = ['*']
+USE_BASIC_AUTH = onfig("USE_BASIC_AUTH", cast=bool, default=True)
+if USE_BASIC_AUTH:
+    SWAGGER_SETTINGS["SECURITY_DEFINITIONS"]["Basic"] = {
+        "type": "basic",
+        "name": "Bearer",
+        "in": "header"
+    }
 
-INSTALLED_APPS += [
-    "django_extensions",
-]
+ALLOWED_HOSTS = ["*"]
