@@ -15,21 +15,6 @@ class Plan(BaseInfoModel, PeriodModel):
                                     related_name='plans')
 
 
-class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
-    plan = models.ForeignKey('management.Plan', related_name='scheduled_tasks',
-                             on_delete=models.DO_NOTHING, null=False, blank=False)
-    priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
-                                default=TaskPriorityEnum.MEDIUM)
-    responsible = models.ForeignKey('auth.User', related_name='responsible_scheduled_tasks', on_delete=models.DO_NOTHING,
-                                    null=True, blank=True, verbose_name='Responsible User')
-    team = models.ManyToManyField('auth.User',
-                                  related_name='assigned_scheduled_tasks')
-    created_by = models.ForeignKey('auth.User', related_name='created_scheduled_tasks',
-                                   on_delete=models.DO_NOTHING, null=True, blank=True)
-    recurrence_rule = models.CharField(max_length=255)
-    next_run_date = models.DateField()
-
-
 class Task(BaseInfoModel, AuditModel):
     """
         Modelo para tareas de mantenimiento
@@ -49,6 +34,21 @@ class Task(BaseInfoModel, AuditModel):
                              on_delete=models.DO_NOTHING, null=True, blank=True)
     scheduled = models.ForeignKey('management.ScheduledTask', on_delete=models.SET_NULL,
                                   related_name='scheduled_tasks', null=True, blank=True)
+
+
+class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
+    plan = models.ForeignKey('management.Plan', related_name='scheduled_tasks',
+                             on_delete=models.DO_NOTHING, null=False, blank=False)
+    priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
+                                default=TaskPriorityEnum.MEDIUM)
+    responsible = models.ForeignKey('auth.User', related_name='responsible_scheduled_tasks', on_delete=models.DO_NOTHING,
+                                    null=True, blank=True, verbose_name='Responsible User')
+    team = models.ManyToManyField('auth.User',
+                                  related_name='assigned_scheduled_tasks')
+    created_by = models.ForeignKey('auth.User', related_name='created_scheduled_tasks',
+                                   on_delete=models.DO_NOTHING, null=True, blank=True)
+    recurrence_rule = models.CharField(max_length=255)
+    next_run_date = models.DateField()
 
 
 class TaskComment(AuditModel):
