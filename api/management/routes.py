@@ -1,12 +1,12 @@
 # .\api\management\routes.py
 from django.urls import path
-from api.core.routes import METHODS, METHODS_ID
+from api.core.routes import METHODS, METHODS_ID, get_crud_route
 from api.management.views.plan_view import PlanView
+from api.management.views.task_view import TaskView
 
 urlpatterns = [
     # PLAN
-    path("plan/",
-         PlanView.as_view({**METHODS}), name="plan"),
-    path("plan/<int:id>/",
-         PlanView.as_view({**METHODS_ID}), name="plan_id"),
+    *get_crud_route("plan", PlanView),
+    # TASK
+    *get_crud_route("task", TaskView),
 ]
