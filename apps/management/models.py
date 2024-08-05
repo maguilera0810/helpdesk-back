@@ -20,7 +20,7 @@ class Task(BaseInfoModel, AuditModel):
     """
         Modelo para tareas de mantenimiento
     """
-    code = models.UUIDField(default=uuid4, editable=False)
+    code = models.UUIDField(default=uuid4, editable=False, db_index=True)
     type = models.CharField(max_length=50, choices=TaskTypeEnum.choices,
                             default=TaskTypeEnum.PREVENTIVE)
     status = models.CharField(max_length=50, choices=TaskStatusEnum.choices,
@@ -32,7 +32,7 @@ class Task(BaseInfoModel, AuditModel):
     responsible = models.ForeignKey("auth.User", related_name="responsible_tasks", on_delete=models.DO_NOTHING,
                                     null=False, blank=True)
     team = models.ManyToManyField("auth.User", related_name="assigned_tasks",
-                                   blank=True)
+                                  blank=True)
     plan = models.ForeignKey("management.Plan", related_name="tasks",
                              on_delete=models.DO_NOTHING, null=True)
     scheduled = models.ForeignKey("management.ScheduledTask", on_delete=models.SET_NULL,
