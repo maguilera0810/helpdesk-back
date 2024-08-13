@@ -2,10 +2,9 @@ import base64
 import string
 from contextlib import suppress
 from secrets import choice
-from typing import Callable, Union, Optional
+from typing import Optional
 from uuid import uuid4
 
-from django.db.models import Model
 from django.utils.text import slugify
 
 
@@ -37,13 +36,10 @@ class DecodeUtil:
         return "".join(choice(characters) for _ in range(length))
 
     @staticmethod
-    def generate_default_string(model: Union[Callable[[], Model], str]) -> Callable[[], str]:
-        if callable(model):
-            model_name = slugify(model().__name__)
-        elif isinstance(model, str):
-            model_name = slugify(model)
+    def generate_default_string(prefix: str) -> str:
+        prefix_slug = slugify(prefix)
         uuid_code = str(uuid4()).replace("-", "")
-        return lambda: f"{model_name}_{uuid_code}"
+        return f"{prefix_slug}_{uuid_code}"
 
     @staticmethod
     def generate_uuid4() -> str:
