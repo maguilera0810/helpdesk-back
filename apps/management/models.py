@@ -1,6 +1,5 @@
 # .\apps\management\models.py
 from typing import Union
-from uuid import uuid4
 
 from django.db import models
 
@@ -20,7 +19,8 @@ class Task(BaseInfoModel, AuditModel):
     """
         Modelo para tareas de mantenimiento
     """
-    code = models.UUIDField(default=uuid4, editable=False, db_index=True)
+    code = models.CharField(max_length=37, editable=False,
+                            db_index=True, blank=False)
     type = models.CharField(max_length=50, choices=TaskTypeEnum.choices,
                             default=TaskTypeEnum.PREVENTIVE)
     status = models.CharField(max_length=50, choices=TaskStatusEnum.choices,
