@@ -19,8 +19,8 @@ class Task(BaseInfoModel, AuditModel):
     """
         Modelo para tareas de mantenimiento
     """
-    code = models.CharField(max_length=37, editable=False,
-                            db_index=True, blank=False)
+    code = models.CharField(max_length=37, editable=False, blank=False,
+                            db_index=True,  unique=True)
     type = models.CharField(max_length=50, choices=TaskTypeEnum.choices,
                             default=TaskTypeEnum.PREVENTIVE)
     status = models.CharField(max_length=50, choices=TaskStatusEnum.choices,
