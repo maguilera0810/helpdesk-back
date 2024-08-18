@@ -25,6 +25,7 @@ class TaskView(BaseCRUDView, IsAuthenticatedView):
 
     @schema(action="create")
     def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
         """
         Method: POST
 
@@ -56,6 +57,7 @@ class TaskView(BaseCRUDView, IsAuthenticatedView):
 
     @schema(action="update")
     def update(self, request, id, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
         """
         Method: PUT
 
