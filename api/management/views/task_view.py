@@ -3,8 +3,8 @@ from rest_framework.response import Response
 
 from api.core.views.base_crud_view import BaseCRUDView
 from api.core.views.base_permission_view import IsAuthenticatedView
+from api.management.serializers.task_serializer import TaskSerializer
 from api.management.services.task_service import TaskService
-from apps.management.serializers import TaskSerializer
 from resources.decorators.swagger_decorators import custom_swagger_schema
 
 
@@ -27,24 +27,67 @@ class TaskView(BaseCRUDView, IsAuthenticatedView):
     def create(self, request, *args, **kwargs):
         """
         Method: POST
+
+        Request:
+            - title (str)
+            - description (str)
+            - code (str)
+            - type (str)
+            - status 
+            - priority
+            - created_by: por el token de usuario
+            - responsible
+            - team
+            - plan
+            - scheduled
+            - date_execution TODO
+            - interval TODO
         """
         data = request.data
         user = request.user
 
-        error, task = self.srv_class.create_task(user=user,
-                                                 data=data)
-        if user:
-            serializer = self.serial_class(user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response({"error_code": error})
+        serializer = self.serial_class(data=data,
+                                       partial=True,
+                                       context={"request_user": user})
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @schema(action="update")
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+    def update(self, request, id, *args, **kwargs):
+        """
+        Method: PUT
 
-    # @schema(action="partial_update")
-    # def partial_update(self, request, *args, **kwargs):
-    #     return super().partial_update(request, *args, **kwargs)
+        Request:
+            - title (str)
+            - description (str)
+            - code (str)
+            - type (str)
+            - status 
+            - priority
+            - created_by: por el token de usuario
+            - responsible
+            - team
+            - plan
+            - scheduled
+            - date_execution TODO
+            - interval TODO
+        """
+        data = request.data
+        user = request.user
+
+        if not (task := self.srv_class.get_one(id=id)):
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serial_class(task,
+                                       data=data,
+                                       partial=True,
+                                       context={"request_user": user})
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @schema(action="destroy")
     def destroy(self, request, *args, **kwargs):
