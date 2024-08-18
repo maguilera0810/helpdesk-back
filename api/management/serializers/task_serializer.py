@@ -12,6 +12,8 @@ class TaskSerializer(ModelSerializer):
         read_only_fields = (
             "code",
             "created_by",
+            "created_at",
+            "updated_at",
         )
 
     def validate_responsible(self, value):
@@ -36,11 +38,8 @@ class TaskSerializer(ModelSerializer):
 
     @transaction.atomic
     def save(self, **kwargs):
-        if self.instance:
-            for param in ("code", "created_by"):
-                if param in self.validated_data:
-                    self.validated_data.pop(param)
-        else:
+
+        if not self.instance:
             request = self.context.get("request")
             self.validated_data["created_by"] = request.user
         return super().save(**kwargs)
