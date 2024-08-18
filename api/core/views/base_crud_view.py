@@ -17,36 +17,45 @@ class BaseCRUDView(viewsets.ViewSet):
 
     def list(self, request, *args, **kwargs):
         """List all items"""
+        user = request.user
         data = request.GET.dict()
         filters = FilterUtil.get_list_filters(data=data)
         items = self.srv_class.get_all(**filters)
-        serializer = self.serial_class(items, many=True)
+        serializer = self.serial_class(items, many=True,
+                                       context={"request_user": user})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         """Create a new item"""
-        serializer = self.serial_class(data=request.data)
+        user = request.user
+        serializer = self.serial_class(data=request.data,
+                                       context={"request_user": user})
         if serializer.is_valid():
             item = serializer.save()
             if hasattr(self.srv_class, "set_translation_keys"):
-                self.srv_class.set_translation_keys(instance=item, keys=["translation_key"])
+                self.srv_class.set_translation_keys(instance=item,
+                                                    keys=["translation_key"])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, id: int, *args, **kwargs):
         """Retrieve a specific item by ID"""
+        user = request.user
         if item := self.srv_class.get_one(id=id):
-            serializer = self.serial_class(item)
+            serializer = self.serial_class(item,
+                                           context={"request_user": user})
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({}, status=status.HTTP_404_NOT_FOUND)
 
     def update(self, request, id: int, *args, **kwargs):
         """Update a specific item by ID"""
+        user = request.user
         item = self.srv_class.get_one(id=id)
         if not item:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
         data = request.data
-        serializer = self.serial_class(item, data=data, partial=True)
+        serializer = self.serial_class(item, data=data, partial=True,
+                                       context={"request_user": user})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
