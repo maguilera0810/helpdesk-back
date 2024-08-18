@@ -55,10 +55,10 @@ class AuthAdminView(BaseCRUDView, IsAdminView):
             },
         }
         """
-        user = request.user
+
         data = request.data
         errors, user = self.srv_class.create_user(data=data,
-                                                 request_user=user)
+                                                  request=request)
         if user:
             serializer = self.serial_class(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -91,11 +91,10 @@ class AuthAdminView(BaseCRUDView, IsAdminView):
             },
         }
         """
-        user = request.user
         data = request.data
         errors, user = self.srv_class.update_user(id=id,
                                                   data=data,
-                                                  request_user=user)
+                                                  request=request)
         if user:
             serializer = self.serial_class(user)
             return Response(serializer.data, status=status.HTTP_200_OK)

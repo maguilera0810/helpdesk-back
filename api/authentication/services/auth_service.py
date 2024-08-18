@@ -16,11 +16,11 @@ class AuthService(BaseCRUDService):
 
     @classmethod
     @transaction.atomic
-    def create_user(cls, data: dict, request_user: User):
+    def create_user(cls, data: dict, request):
 
         user_serializer = UserCrudSerializer(data=data,
                                              partial=True,
-                                             context={'request_user': request_user})
+                                             context={'request': request})
         if not user_serializer.is_valid():
             return user_serializer.errors, None
         user = user_serializer.save()
@@ -35,14 +35,14 @@ class AuthService(BaseCRUDService):
 
     @classmethod
     @transaction.atomic
-    def update_user(cls, id: int, data: dict, request_user: User):
+    def update_user(cls, id: int, data: dict, request):
         """
         Updates a user and their profile information.
 
         Args:
             id (int): The ID of the user to update.
             data (dict): The data transfer object containing the new user data.
-            request_user (User): The user making the request.
+            request (http request):
 
         Returns:
             tuple: A tuple containing a list of error messages (if any) and the updated user instance.
@@ -54,7 +54,7 @@ class AuthService(BaseCRUDService):
         user_serializer = UserCrudSerializer(instance=user,
                                              data=data,
                                              partial=True,
-                                             context={'request_user': request_user})
+                                             context={'request': request})
         if not user_serializer.is_valid():
             return user_serializer.errors, None
         user = user_serializer.save()
@@ -107,19 +107,19 @@ class AuthService(BaseCRUDService):
 
     @classmethod
     @transaction.atomic
-    def delete_user(cls, id: int, request_user: User):
+    def delete_user(cls, id: int, request: User):
         """
         Deletes a user and their profile information.
 
         Args:
             id (int): The ID of the user to delete.
-            request_user (User): The user making the request.
+            request (User): The user making the request.
 
         Returns:
             tuple: A tuple containing a success message or error message.
         """
         # Verificar si el usuario que realiza la solicitud tiene permisos
-        if not request_user.is_superuser:
+        if not request.is_superuser:
             return ["You do not have permission to delete this user."], None
 
         # Buscar el usuario por ID

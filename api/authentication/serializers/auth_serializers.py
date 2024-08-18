@@ -43,7 +43,7 @@ class UserCrudSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = "__all__"  # Incluir todos los campos del modelo User
+        fields = "__all__"
         extra_kwargs = {
             "password": {"write_only": True},
         }
@@ -70,8 +70,10 @@ class UserCrudSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data: dict):
-
-        if request_user := self.context.get("request_user"):
+        request = self.context.get("request")
+        if not request:
+            return data
+        if request_user := request.user:
             is_superuser = request_user.is_superuser
             if not is_superuser and self.instance and request_user.id != self.instance.id:
                 raise ValidationError(ValidatorMsgEnum.DONT_HAVE_PERMISSION)
