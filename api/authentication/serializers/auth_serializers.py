@@ -69,15 +69,18 @@ class UserCrudSerializer(serializers.ModelSerializer):
                 raise ValidationError(msg)
         return value
 
-    def validate(self, data: dict):
+    def validate_request_user(self):
         request = self.context.get("request")
         if not request:
             raise ValidationError({"request": "no_request"})
         request_user = request.user
         if not request_user:
             raise ValidationError({"user": "no_request_user"})
+        return request_user
+
+    def validate_superuser(self, data: dict, request_user: User):
         if request_user.is_superuser:
-            return data
+            return
         if self.instance and request_user.id != self.instance.id:
             raise ValidationError(ValidatorMsgEnum.DONT_HAVE_PERMISSION)
         restricted_fields = ("is_staff", "is_active", "is_superuser")
@@ -85,6 +88,11 @@ class UserCrudSerializer(serializers.ModelSerializer):
             if field in data:
                 raise ValidationError(
                     {field: ValidatorMsgEnum.DONT_HAVE_PERMISSION})
+
+    def validate(self, data: dict):
+        request_user = self.validate_request_user()
+        self.validate_superuser(data=data,
+                                request_user=request_user)
         return data
 
     @transaction.atomic
