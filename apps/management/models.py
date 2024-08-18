@@ -29,8 +29,8 @@ class Task(BaseInfoModel, AuditModel):
                                 default=TaskPriorityEnum.MEDIUM)
     created_by = models.ForeignKey("auth.User", related_name="created_tasks",
                                    on_delete=models.DO_NOTHING, null=False, editable=False)
-    responsible = models.ForeignKey("auth.User", related_name="responsible_tasks", on_delete=models.DO_NOTHING,
-                                    null=False, blank=True)
+    responsible = models.ForeignKey("auth.User", related_name="responsible_tasks",
+                                    on_delete=models.DO_NOTHING, null=True, blank=True)
     team = models.ManyToManyField("auth.User", related_name="assigned_tasks",
                                   blank=True)
     plan = models.ForeignKey("management.Plan", related_name="tasks",
