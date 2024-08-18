@@ -73,15 +73,18 @@ class UserCrudSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if not request:
             return data
-        if request_user := request.user:
-            is_superuser = request_user.is_superuser
-            if not is_superuser and self.instance and request_user.id != self.instance.id:
-                raise ValidationError(ValidatorMsgEnum.DONT_HAVE_PERMISSION)
-            restricted_fields = ("is_staff", "is_active", "is_superuser")
-            for field in restricted_fields:
-                if field in data and not is_superuser:
-                    raise ValidationError(
-                        {field: "You do not have permission to modify this field."})
+        request_user = request.user
+        if not request_user:
+            raise ValidationError(
+                {"user": "no_request_user"})
+        is_superuser = request_user.is_superuser
+        if not is_superuser and self.instance and request_user.id != self.instance.id:
+            raise ValidationError(ValidatorMsgEnum.DONT_HAVE_PERMISSION)
+        restricted_fields = ("is_staff", "is_active", "is_superuser")
+        for field in restricted_fields:
+            if field in data and not is_superuser:
+                raise ValidationError(
+                    {field: "You do not have permission to modify this field."})
         return data
 
     @transaction.atomic
