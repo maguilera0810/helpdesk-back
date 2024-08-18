@@ -36,15 +36,11 @@ class TaskSerializer(ModelSerializer):
 
     @transaction.atomic
     def save(self, **kwargs):
-        request = self.context.get("request")
-        if not request:
-            return data
-        request_user = request.user
-
         if self.instance:
             for param in ("code", "created_by"):
                 if param in self.validated_data:
                     self.validated_data.pop(param)
         else:
-            self.validated_data["created_by"] = request_user
+            request = self.context.get("request")
+            self.validated_data["created_by"] = request.user
         return super().save(**kwargs)
