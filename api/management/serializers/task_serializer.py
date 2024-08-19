@@ -16,12 +16,12 @@ class TaskSerializer(ModelSerializer):
             "updated_at",
         )
 
-    def validate_responsible(self, value):
-        team_members = self.initial_data.get("team", [])
-        if value and value.id not in team_members:
-            raise ValidationError(
-                "The responsible person must be part of the assigned team.")
-        return value
+    # def validate_responsible(self, value):
+    #     team_members = self.initial_data.get("team", [])
+    #     if value and value.id not in team_members:
+    #         raise ValidationError(
+    #             "The responsible person must be part of the assigned team.")
+    #     return value
 
     def validate_request_user(self):
         request = self.context.get("request")
