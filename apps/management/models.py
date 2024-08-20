@@ -3,7 +3,7 @@ from typing import Union
 
 from django.db import models
 
-from apps.core.models import AuditModel, BaseInfoModel, PeriodModel
+from apps.core.models import AuditModel, BaseInfoModel, PeriodModel, BaseModel
 from resources.enums import TaskPriorityEnum, TaskStatusEnum, TaskTypeEnum
 
 
@@ -71,18 +71,18 @@ class RequestingUnit(BaseInfoModel):
                                       related_name="administered_units")
 
 
-class Request(models.Model):
+class Request(BaseModel):
     """
         Modelo para solicitudes
     """
     requesting_unit = models.ForeignKey("management.RequestingUnit", on_delete=models.CASCADE,
                                         related_name="requests")
-    task = models.OneToOneField("management.Task",
-                                on_delete=models.DO_NOTHING)
+    task = models.OneToOneField("management.Task", on_delete=models.DO_NOTHING,
+                                null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-class TaskHistory(models.Model):
+class TaskHistory(BaseModel):
     """ 
         Modelo para historial de tareas
     """
