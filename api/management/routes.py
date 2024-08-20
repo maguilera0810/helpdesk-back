@@ -1,6 +1,7 @@
 # .\api\management\routes.py
 from django.urls import path
-from api.core.routes import METHODS, METHODS_ID, get_crud_route
+
+from api.core.routes import get_crud_route
 from api.management.views.plan_view import PlanView
 from api.management.views.task_view import TaskView
 
