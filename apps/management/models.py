@@ -3,8 +3,9 @@ from typing import Union
 
 from django.db import models
 
-from apps.core.models import AuditModel, BaseInfoModel, PeriodModel, BaseModel
-from resources.enums import TaskPriorityEnum, TaskStatusEnum, TaskTypeEnum
+from apps.core.models import AuditModel, BaseInfoModel, BaseModel, PeriodModel
+from resources.enums import (IssueStatusEnum, TaskPriorityEnum, TaskStatusEnum,
+                             TaskTypeEnum)
 
 
 class Plan(BaseInfoModel, PeriodModel):
@@ -39,6 +40,22 @@ class Task(BaseInfoModel, AuditModel):
                                   related_name="scheduled_tasks", null=True, blank=True)
 
 
+class Issue(BaseInfoModel, AuditModel):
+    """
+        Modelo para solicitudes
+    """
+    requesting_unit = models.ForeignKey("management.RequestingUnit", on_delete=models.CASCADE,
+                                        related_name="requests")
+    task = models.OneToOneField("management.Task", on_delete=models.DO_NOTHING,
+                                null=True, blank=True, related_name="issue")
+    status = models.CharField(max_length=50, choices=IssueStatusEnum.choices,
+                              default=IssueStatusEnum.TO_DO)
+    created_by = models.ForeignKey("auth.User", related_name="created_request",
+                                   on_delete=models.DO_NOTHING, null=False, editable=False)
+    contact_email = models.CharField(max_length=100, blank=True)
+    contact_phone = models.CharField(max_length=10, blank=True)
+
+
 class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
     plan = models.ForeignKey("management.Plan", related_name="scheduled_tasks",
                              on_delete=models.DO_NOTHING, null=False, blank=False)
@@ -71,17 +88,6 @@ class RequestingUnit(BaseInfoModel):
                                       related_name="administered_units")
 
 
-class Request(BaseModel):
-    """
-        Modelo para solicitudes
-    """
-    requesting_unit = models.ForeignKey("management.RequestingUnit", on_delete=models.CASCADE,
-                                        related_name="requests")
-    task = models.OneToOneField("management.Task", on_delete=models.DO_NOTHING,
-                                null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
 class TaskHistory(BaseModel):
     """ 
         Modelo para historial de tareas
@@ -108,7 +114,7 @@ MODELS = [
     ScheduledTask,
     Task,
     RequestingUnit,
-    Request,
+    Issue,
     TaskHistory,
     Report,
 ]
@@ -117,7 +123,7 @@ MODEL_TYPES = Union[
     ScheduledTask,
     Task,
     RequestingUnit,
-    Request,
+    Issue,
     TaskHistory,
     Report,
 ]

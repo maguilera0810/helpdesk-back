@@ -1,7 +1,7 @@
 # .\apps\management\serializers.py
 from rest_framework.serializers import ModelSerializer
 
-from apps.management.models import (Plan, Report, Request, RequestingUnit,
+from apps.management.models import (Issue, Plan, Report, RequestingUnit,
                                     ScheduledTask, Task, TaskHistory)
 
 
@@ -31,7 +31,7 @@ class RequestingUnitSerializer(ModelSerializer):
 
 class RequestSerializer(ModelSerializer):
     class Meta:
-        model = Request
+        model = Issue
         fields = "__all__"
 
 
