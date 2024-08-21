@@ -3,7 +3,8 @@ from typing import Union
 
 from django.db import models
 
-from apps.core.models import AuditModel, BaseInfoModel, BaseModel, PeriodModel
+from apps.core.models import (AuditModel, BaseInfoModel, BaseModel,
+                              PeriodModel, StorageModel)
 from resources.enums import (IssueStatusEnum, TaskPriorityEnum, TaskStatusEnum,
                              TaskTypeEnum)
 
@@ -41,19 +42,24 @@ class Task(BaseInfoModel, AuditModel):
 
 
 class Issue(BaseInfoModel, AuditModel):
-    """
-        Modelo para solicitudes
-    """
     requesting_unit = models.ForeignKey("management.RequestingUnit", on_delete=models.CASCADE,
                                         related_name="requests")
     task = models.OneToOneField("management.Task", on_delete=models.DO_NOTHING,
                                 null=True, blank=True, related_name="issue")
+    categories = models.ManyToManyField("common.Category", blank=True,
+                                        related_name="issues")
     status = models.CharField(max_length=50, choices=IssueStatusEnum.choices,
                               default=IssueStatusEnum.TO_DO)
-    created_by = models.ForeignKey("auth.User", related_name="created_request",
+    created_by = models.ForeignKey("auth.User", related_name="created_issues",
                                    on_delete=models.DO_NOTHING, null=False, editable=False)
     contact_email = models.CharField(max_length=100, blank=True)
     contact_phone = models.CharField(max_length=10, blank=True)
+
+
+class IssueFile(BaseInfoModel, AuditModel, StorageModel):
+    issue = models.ForeignKey("management.Issue", on_delete=models.CASCADE,
+                              related_name="files")
+    file = models.CharField(max_length=200)
 
 
 class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
