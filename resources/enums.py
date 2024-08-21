@@ -10,6 +10,14 @@ class TaskPriorityEnum(TextChoices):
     LOWEST = "lowest", _("lowest")
 
 
+class IssueStatusEnum(TextChoices):
+    TO_DO = "to_do", _("to_do")
+    IN_PROGRESS = "in_progress", _("in_progress")
+    BLOCKED = "blocked", _("blocked")
+    TO_VALIDATE = "to_validate", _("to_validate")
+    COMPLETED = "completed", _("completed")
+
+
 class TaskStatusEnum(TextChoices):
     TO_DO = "to_do", _("to_do")
     IN_PROGRESS = "in_progress", _("in_progress")
@@ -21,6 +29,11 @@ class TaskStatusEnum(TextChoices):
 class TaskTypeEnum(TextChoices):
     EMERGENCY = "emergency", _("emergency")
     PREVENTIVE = "preventive", _("preventive")
+
+
+class CategoryTypeEnum(TextChoices):
+    SKILL = "skill", _("skill")
+    ISSUE = "issue", _("issue")
 
 
 class DocumentTypeEnum(TextChoices):
@@ -52,3 +65,19 @@ class ValidatorMsgEnum(TextChoices):
     PHONE_ERROR = "phone_error", _("phone_error")
     PHONE_OK = "phone_ok", _("phone_ok")
     ALL_OK = "all_ok", _("all_ok")
+
+
+class StoragePathEnum(TextChoices):
+    base = "virtual-pet/<env>"
+    action = f"{base}/action/<action_id>"
+    action_animation = f"{action}/animation.<format>"
+    answer = f"{base}/answer/<answer_id>"
+    answer_icon = f"{answer}/icon.<format>"
+    item = f"{base}/item/<item_id>"
+    item_icon = f"{item}/icon.<format>"
+    item_animation = f"{item}/animation.<format>"
+    pet = f"{base}/pet/<pet_id>"
+    state = f"{base}/state/<state_id>"
+    state_animation = f"{state}/animation.<format>"
+    store = f"{base}/store/<store_id>"
+    store_icon = f"{store}/icon.<format>"
