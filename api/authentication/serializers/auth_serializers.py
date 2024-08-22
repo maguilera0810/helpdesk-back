@@ -3,16 +3,17 @@ from copy import deepcopy
 
 from django.contrib.auth.models import User
 from django.db import transaction
-from rest_framework import serializers
-from rest_framework.serializers import ValidationError
+from rest_framework.serializers import (CharField, EmailField, ModelSerializer,
+                                        Serializer, ValidationError)
 
+from api.core.serializers.base_serializer import BaseSerializer
 from apps.authentication.models import Profile
 from apps.authentication.serializers import ProfileSerializer
 from resources.enums import ValidatorMsgEnum
 from resources.validators.field_validator import FieldValidator
 
 
-class UserPublicSerializer(serializers.ModelSerializer):
+class UserPublicSerializer(ModelSerializer):
     profile = ProfileSerializer(required=False, read_only=True)
 
     class Meta:
@@ -20,7 +21,7 @@ class UserPublicSerializer(serializers.ModelSerializer):
         exclude = ("password",)
 
 
-class ProfileCrudSerializer(serializers.ModelSerializer):
+class ProfileCrudSerializer(BaseSerializer):
     class Meta:
         model = Profile
         fields = "__all__"
@@ -38,8 +39,8 @@ class ProfileCrudSerializer(serializers.ModelSerializer):
         return value
 
 
-class UserCrudSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=False)
+class UserCrudSerializer(BaseSerializer):
+    password = CharField(write_only=True, required=False)
 
     class Meta:
         model = User
@@ -68,15 +69,6 @@ class UserCrudSerializer(serializers.ModelSerializer):
             if not is_ok:
                 raise ValidationError(msg)
         return value
-
-    def validate_request_user(self):
-        request = self.context.get("request")
-        if not request:
-            raise ValidationError({"request": "no_request"})
-        request_user = request.user
-        if not request_user:
-            raise ValidationError({"user": "no_request_user"})
-        return request_user
 
     def validate_superuser(self, data: dict, request_user: User):
         if request_user.is_superuser:
@@ -107,7 +99,7 @@ class UserCrudSerializer(serializers.ModelSerializer):
         return user
 
 
-class ProfilePublicSerializer(serializers.ModelSerializer):
+class ProfilePublicSerializer(ModelSerializer):
 
     class Meta:
         model = Profile
@@ -119,7 +111,7 @@ class ProfilePublicSerializer(serializers.ModelSerializer):
             "is_available")
 
 
-class UserAdminListSerializer(serializers.ModelSerializer):
+class UserAdminListSerializer(ModelSerializer):
     profile = ProfilePublicSerializer()
 
     class Meta:
@@ -134,10 +126,10 @@ class UserAdminListSerializer(serializers.ModelSerializer):
         )
 
 
-class CustomAuthTokenSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=False)
-    document = serializers.CharField(required=False)
-    password = serializers.CharField(write_only=True)
+class CustomAuthTokenSerializer(Serializer):
+    email = EmailField(required=False)
+    document = CharField(required=False)
+    password = CharField(write_only=True)
 
     def validate(self, attrs):
         email = attrs.get("email")

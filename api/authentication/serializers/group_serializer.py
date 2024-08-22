@@ -1,9 +1,10 @@
 # .\api\authentication\serializers\auth_serializers.py
 from django.contrib.auth.models import Group
-from rest_framework.serializers import ModelSerializer
+
+from api.core.serializers.base_serializer import BaseSerializer
 
 
-class GroupSerializer(ModelSerializer):
+class GroupSerializer(BaseSerializer):
     class Meta:
         model = Group
         fields = "__all__"

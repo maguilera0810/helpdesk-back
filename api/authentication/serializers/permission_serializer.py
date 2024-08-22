@@ -1,9 +1,10 @@
 # .\api\authentication\serializers\auth_serializers.py
 from django.contrib.auth.models import Permission
-from rest_framework.serializers import ModelSerializer
+
+from api.core.serializers.base_serializer import BaseSerializer
 
 
-class PermissionSerializer(ModelSerializer):
+class PermissionSerializer(BaseSerializer):
 
     class Meta:
         model = Permission

@@ -1,10 +1,10 @@
 from django.db import transaction
-from rest_framework.serializers import ModelSerializer, ValidationError
 
+from api.core.serializers.base_serializer import BaseSerializer
 from apps.management.models import Task
 
 
-class TaskSerializer(ModelSerializer):
+class TaskSerializer(BaseSerializer):
 
     class Meta:
         model = Task
@@ -15,26 +15,6 @@ class TaskSerializer(ModelSerializer):
             "created_at",
             "updated_at",
         )
-
-    # def validate_responsible(self, value):
-    #     team_members = self.initial_data.get("team", [])
-    #     if value and value.id not in team_members:
-    #         raise ValidationError(
-    #             "The responsible person must be part of the assigned team.")
-    #     return value
-
-    def validate_request_user(self):
-        request = self.context.get("request")
-        if not request:
-            raise ValidationError({"request": "no_request"})
-        request_user = request.user
-        if not request_user:
-            raise ValidationError({"user": "no_request_user"})
-        return request_user
-
-    def validate(self, data: dict):
-        self.validate_request_user()
-        return data
 
     @transaction.atomic
     def save(self, **kwargs):
