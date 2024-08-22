@@ -51,7 +51,7 @@ class Issue(BaseInfoModel, AuditModel):
     status = models.CharField(max_length=50, choices=IssueStatusEnum.choices,
                               default=IssueStatusEnum.TO_DO)
     created_by = models.ForeignKey("auth.User", related_name="created_issues",
-                                   on_delete=models.DO_NOTHING, null=False, editable=False)
+                                   on_delete=models.DO_NOTHING, editable=False)
     contact_email = models.CharField(max_length=100, blank=True)
     contact_phone = models.CharField(max_length=10, blank=True)
 
@@ -60,6 +60,8 @@ class IssueFile(BaseInfoModel, AuditModel, StorageModel):
     issue = models.ForeignKey("management.Issue", on_delete=models.CASCADE,
                               related_name="files")
     file = models.CharField(max_length=200)
+    created_by = models.ForeignKey("auth.User", related_name="created_issue_files",
+                                   on_delete=models.DO_NOTHING, editable=False)
 
 
 class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
@@ -72,7 +74,7 @@ class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
     team = models.ManyToManyField("auth.User",
                                   related_name="assigned_scheduled_tasks")
     created_by = models.ForeignKey("auth.User", related_name="created_scheduled_tasks",
-                                   on_delete=models.DO_NOTHING, null=True, blank=True)
+                                   on_delete=models.DO_NOTHING, editable=False)
     recurrence_rule = models.CharField(max_length=255)
     next_run_date = models.DateField()
 
