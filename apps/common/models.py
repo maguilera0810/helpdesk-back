@@ -8,7 +8,9 @@ from resources.enums import CategoryTypeEnum
 
 
 class Tag(BaseInfoModel):
-    ...
+
+    code = models.CharField(max_length=35, editable=False, blank=False,
+                            db_index=True,  unique=True)
 
 
 class Category(BaseInfoModel):
@@ -19,9 +21,10 @@ class Category(BaseInfoModel):
                             default=CategoryTypeEnum.SKILL)
 
 
-class Skill(BaseModel):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
+class Skill(BaseInfoModel):
+
+    code = models.CharField(max_length=37, editable=False, blank=False,
+                            db_index=True,  unique=True)
     profiles = models.ManyToManyField("common.Skill", related_name="skills")
 
     def __str__(self):
