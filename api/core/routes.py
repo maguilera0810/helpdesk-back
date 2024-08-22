@@ -17,9 +17,14 @@ METHODS_FILE = {
 }
 
 
-def get_crud_route(model: str, view: BaseCRUDView):
+def get_crud_route(model: str, view: BaseCRUDView, has_files: bool = False):
     model = slugify(model)
-    return [
-        path(f"{model}/", view.as_view({**METHODS})),
-        path(f"{model}/<int:id>/", view.as_view({**METHODS_ID})),
+    paths = [
+        path(f"{model}/", view.as_view(METHODS)),
+        path(f"{model}/<int:id>/", view.as_view(METHODS_ID)),
     ]
+    if has_files:
+        paths += [
+            path(f"{model}/<int:id>/files/", view.as_view(METHODS_FILE)),
+        ]
+    return paths
