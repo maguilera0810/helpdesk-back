@@ -1,15 +1,15 @@
-# .\api\common\views\skill_view.py
-from api.common.serializers.skill_serializer import SkillSerializer
-from api.common.services.skill_service import SkillService
+# .\api\common\views\category_view.py
+from api.common.serializers.category_serializer import CategorySerializer
+from api.common.services.category_service import CategoryService
 from api.core.views.base_crud_view import BaseCRUDView
 from api.core.views.base_permission_view import IsAuthenticatedView
 from resources.decorators.swagger_decorators import custom_swagger_schema
 
 
-class SkillView(BaseCRUDView, IsAuthenticatedView):
+class CategoryView(BaseCRUDView, IsAuthenticatedView):
 
-    srv_class: type[SkillService] = SkillService
-    serial_class: type[SkillSerializer] = SkillSerializer
+    srv_class: type[CategoryService] = CategoryService
+    serial_class: type[CategorySerializer] = CategorySerializer
     schema = custom_swagger_schema(serial_class)
 
     @schema(action="list")

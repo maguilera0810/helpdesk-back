@@ -1,6 +1,3 @@
-from rest_framework import status
-from rest_framework.response import Response
-
 from api.core.views.base_crud_view import BaseCRUDView
 from api.core.views.base_permission_view import IsAuthenticatedView
 from api.management.serializers.issue_serializer import IssueSerializer
