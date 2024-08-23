@@ -42,8 +42,8 @@ class Task(BaseInfoModel, AuditModel):
 
 
 class Issue(BaseInfoModel, AuditModel):
-    requesting_unit = models.ForeignKey("management.RequestingUnit", on_delete=models.CASCADE,
-                                        related_name="requests")
+    code = models.CharField(max_length=37, editable=False, blank=False,
+                            db_index=True,  unique=True)
     task = models.OneToOneField("management.Task", on_delete=models.DO_NOTHING,
                                 null=True, blank=True, related_name="issue")
     categories = models.ManyToManyField("common.Category", blank=True,
@@ -54,6 +54,8 @@ class Issue(BaseInfoModel, AuditModel):
                                    on_delete=models.DO_NOTHING, editable=False)
     contact_email = models.CharField(max_length=100, blank=True)
     contact_phone = models.CharField(max_length=10, blank=True)
+    requesting_unit = models.ForeignKey("management.RequestingUnit", on_delete=models.CASCADE,
+                                        related_name="requests")
 
 
 class IssueFile(BaseInfoModel, AuditModel, StorageModel):
