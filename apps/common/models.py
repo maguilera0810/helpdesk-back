@@ -41,8 +41,12 @@ class Skill(BaseInfoModel):
 
 
 MODELS = [
+    Category,
     Skill,
+    Tag,
 ]
 MODEL_TYPES = Union[
+    Category,
     Skill,
+    Tag,
 ]
