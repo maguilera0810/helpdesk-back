@@ -3,108 +3,137 @@ from typing import Union
 
 from django.db import models
 
-from apps.core.models import AuditModel, BaseInfoModel, PeriodModel
-from resources.enums import TaskPriorityEnum, TaskStatusEnum, TaskTypeEnum
+from apps.core.models import (AuditModel, BaseInfoModel, BaseModel,
+                              PeriodModel, StorageModel)
+from resources.enums import (IssueStatusEnum, TaskPriorityEnum, TaskStatusEnum,
+                             TaskTypeEnum)
 
 
-class MaintenancePlan(BaseInfoModel, PeriodModel):
+class Plan(BaseInfoModel, PeriodModel):
     """
         Modelo para plan de mantenimiento
     """
-    responsible = models.ForeignKey('auth.User', on_delete=models.DO_NOTHING,
-                                    related_name='responsible_maintenance_plan')
-
-
-class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
-    maintenance_plan = models.ForeignKey('management.MaintenancePlan', related_name='scheduled_tasks',
-                                         on_delete=models.DO_NOTHING, null=False, blank=False)
-    priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
-                                default=TaskPriorityEnum.MEDIUM)
-    responsible = models.ForeignKey('auth.User', related_name='responsible_scheduled_tasks', on_delete=models.DO_NOTHING,
-                                    null=True, blank=True, verbose_name='Responsible User')
-    team = models.ManyToManyField('auth.User',
-                                  related_name='assigned_scheduled_tasks')
-    created_by = models.ForeignKey('auth.User', related_name='created_scheduled_tasks',
-                                   on_delete=models.DO_NOTHING, null=True, blank=True)
-    recurrence_rule = models.CharField(max_length=255)
-    next_run_date = models.DateField()
+    responsible = models.ForeignKey("auth.User", on_delete=models.DO_NOTHING,
+                                    related_name="plans")
 
 
 class Task(BaseInfoModel, AuditModel):
     """
         Modelo para tareas de mantenimiento
     """
+    code = models.CharField(max_length=37, editable=False, blank=False,
+                            db_index=True,  unique=True)
     type = models.CharField(max_length=50, choices=TaskTypeEnum.choices,
                             default=TaskTypeEnum.PREVENTIVE)
     status = models.CharField(max_length=50, choices=TaskStatusEnum.choices,
-                              default=TaskStatusEnum.PENDING)
+                              default=TaskStatusEnum.TO_DO)
     priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
                                 default=TaskPriorityEnum.MEDIUM)
-    responsible = models.ForeignKey('auth.User', related_name='responsible_tasks', on_delete=models.DO_NOTHING,
-                                    null=True, blank=True, verbose_name='Responsible User')
-    team = models.ManyToManyField('auth.User', related_name='assigned_tasks')
-    created_by = models.ForeignKey('auth.User', related_name='created_tasks',
-                                   on_delete=models.DO_NOTHING, null=True, blank=True)
-    maintenance_plan = models.ForeignKey('management.MaintenancePlan', related_name='tasks',
-                                         on_delete=models.DO_NOTHING, null=True, blank=True)
-    scheduled = models.ForeignKey('management.ScheduledTask', on_delete=models.SET_NULL,
-                                  related_name='scheduled_tasks', null=True, blank=True)
+    created_by = models.ForeignKey("auth.User", related_name="created_tasks",
+                                   on_delete=models.DO_NOTHING, null=False, editable=False)
+    responsible = models.ForeignKey("auth.User", related_name="responsible_tasks",
+                                    on_delete=models.DO_NOTHING, null=True, blank=True)
+    team = models.ManyToManyField("auth.User", related_name="assigned_tasks",
+                                  blank=True)
+    plan = models.ForeignKey("management.Plan", related_name="tasks",
+                             on_delete=models.DO_NOTHING, null=True)
+    scheduled = models.ForeignKey("management.ScheduledTask", on_delete=models.SET_NULL,
+                                  related_name="scheduled_tasks", null=True, blank=True)
+
+
+class Issue(BaseInfoModel, AuditModel):
+    code = models.CharField(max_length=37, editable=False, blank=False,
+                            db_index=True,  unique=True)
+    task = models.OneToOneField("management.Task", on_delete=models.DO_NOTHING,
+                                null=True, blank=True, related_name="issue")
+    categories = models.ManyToManyField("common.Category", blank=True,
+                                        related_name="issues")
+    status = models.CharField(max_length=50, choices=IssueStatusEnum.choices,
+                              default=IssueStatusEnum.TO_DO)
+    created_by = models.ForeignKey("auth.User", related_name="created_issues",
+                                   on_delete=models.DO_NOTHING, editable=False)
+    contact_email = models.CharField(max_length=100, blank=True)
+    contact_phone = models.CharField(max_length=10, blank=True)
+    requesting_unit = models.ForeignKey("management.RequestingUnit", on_delete=models.CASCADE,
+                                        related_name="requests")
+
+
+class IssueFile(BaseInfoModel, AuditModel, StorageModel):
+    issue = models.ForeignKey("management.Issue", on_delete=models.CASCADE,
+                              related_name="files")
+    file = models.CharField(max_length=200)
+    created_by = models.ForeignKey("auth.User", related_name="created_issue_files",
+                                   on_delete=models.DO_NOTHING, editable=False)
+
+
+class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
+    plan = models.ForeignKey("management.Plan", related_name="scheduled_tasks",
+                             on_delete=models.DO_NOTHING, null=False, blank=False)
+    priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
+                                default=TaskPriorityEnum.MEDIUM)
+    responsible = models.ForeignKey("auth.User", related_name="responsible_scheduled_tasks", on_delete=models.DO_NOTHING,
+                                    null=True, blank=True, verbose_name="Responsible User")
+    team = models.ManyToManyField("auth.User",
+                                  related_name="assigned_scheduled_tasks")
+    created_by = models.ForeignKey("auth.User", related_name="created_scheduled_tasks",
+                                   on_delete=models.DO_NOTHING, editable=False)
+    recurrence_rule = models.CharField(max_length=255)
+    next_run_date = models.DateField()
+
+
+class TaskComment(AuditModel):
+    task = models.ForeignKey("management.Task", related_name="comments", on_delete=models.CASCADE,
+                             null=True, blank=True)
+    author = models.ForeignKey("auth.User", related_name="comments", on_delete=models.DO_NOTHING,
+                               null=True, blank=True)
+    content = models.TextField(blank=True)
+    files = models.JSONField(default=list)
 
 
 class RequestingUnit(BaseInfoModel):
     """
         Modelo para unidades requirentes (facultades, departamentos, etc.)
     """
-    administrator = models.ForeignKey('auth.User', on_delete=models.DO_NOTHING,
-                                      related_name='administered_units')
+    administrator = models.ForeignKey("auth.User", on_delete=models.DO_NOTHING,
+                                      related_name="administered_units")
 
 
-class Request(models.Model):
-    """
-        Modelo para solicitudes
-    """
-    requesting_unit = models.ForeignKey('management.RequestingUnit', on_delete=models.CASCADE,
-                                        related_name='requests')
-    task = models.OneToOneField('management.Task', on_delete=models.DO_NOTHING)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-class TaskHistory(models.Model):
+class TaskHistory(BaseModel):
     """ 
         Modelo para historial de tareas
     """
-    task = models.ForeignKey('management.Task', on_delete=models.DO_NOTHING,
-                             related_name='history')
+    task = models.ForeignKey("management.Task", on_delete=models.DO_NOTHING,
+                             related_name="history")
     status = models.CharField(max_length=50, choices=TaskStatusEnum.choices)
     changed_at = models.DateTimeField(auto_now_add=True)
-    changed_by = models.ForeignKey('auth.User', on_delete=models.DO_NOTHING,
-                                   related_name='task_changes')
+    changed_by = models.ForeignKey("auth.User", on_delete=models.DO_NOTHING,
+                                   related_name="task_changes")
 
 
 class Report(AuditModel):
     """
         Modelo para informes
     """
-    task = models.ForeignKey('management.Task', on_delete=models.DO_NOTHING,
-                             related_name='reports')
+    task = models.ForeignKey("management.Task", on_delete=models.DO_NOTHING,
+                             related_name="reports")
     content = models.TextField()
 
 
 MODELS = [
-    MaintenancePlan,
+    Plan,
     ScheduledTask,
     Task,
     RequestingUnit,
-    Request,
+    Issue,
     TaskHistory,
     Report,
 ]
 MODEL_TYPES = Union[
-    MaintenancePlan,
+    Plan,
     ScheduledTask,
     Task,
     RequestingUnit,
-    Request,
+    Issue,
     TaskHistory,
     Report,
 ]

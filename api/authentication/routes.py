@@ -1,30 +1,29 @@
 # .\api\authentication\routes.py
 from django.urls import path
-from rest_framework_simplejwt.views import (TokenObtainPairView,
-                                            TokenRefreshView, TokenVerifyView)
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
-from api.authentication.views.auth_view import (AuthDetailView, AuthView,
+from api.authentication.views.auth_view import (AuthAdminView, AuthDetailView,
+                                                AuthView,
                                                 CustomTokenObtainPairView)
+from api.authentication.views.group_view import GroupView
+from api.authentication.views.permission_view import PermissionView
+from api.core.routes import get_crud_route
 
 urlpatterns = [
-    path(
-        "user-info/", AuthDetailView.as_view({"get": "get_user_info"}), name="user_info"),
-    path("register/", AuthView.as_view({"post": "register"}), name="register"),
-    path("token/", CustomTokenObtainPairView.as_view({"post": "obtain_pair"}), name="token_obtain_pair"),
-    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
+    # ADMIN USER
+    *get_crud_route("admin-user", AuthAdminView),
+    # GROUP
+    *get_crud_route("group", GroupView),
+    # PERMISSION
+    *get_crud_route("permission", PermissionView),
+    # USER
+    path("user/info/",
+         AuthDetailView.as_view({"get": "get_user_info"})),
+    path("user/register/",
+         AuthView.as_view({"post": "create"})),
+    # TOKEN
+    path("token/", CustomTokenObtainPairView.as_view(
+        {"post": "obtain_pair"})),
+    path("token/refresh/", TokenRefreshView.as_view()),
+    path("token/verify/", TokenVerifyView.as_view()),
 ]
-
-
-"""
-obtain-pair
-{"username": "mauricio@familify.com", "password": "123456"}
-refresh
-{
-    "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6NDgxMDg5Mzc2MiwiaWF0IjoxNjU3MjkzNzYyLCJqdGkiOiI2MTYwNmI2MWNjZjY0M2YzYTJhZWRhMGM1NzNjYTkwNCIsInVzZXJfaWQiOjEwMzc0MjR9.SMa4m2lvoEEQmihh0PmpFSTVZB9oz2LI4NnBdkKRzdk"
-}
-verify
-{
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYyNzI1MDAyLCJpYXQiOjE2NjI0NjU4MDIsImp0aSI6IjQ4YzNjOWU0MDQyMDQ1OWZiNzFhNGNhNjgwNGMzM2YwIiwidXNlcl9pZCI6ODM4Mjc0fQ.7AQHt6H4Mgq2PQLpgQIgUUOfUfWK66hzDHu5WkNvcww"
-}
-"""

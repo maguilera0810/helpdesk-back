@@ -1,6 +1,6 @@
 from api.core.services.base_crud_service import BaseCRUDService
-from apps.management.models import Request
+from apps.management.models import Report
 
 
-class RequestService(BaseCRUDService):
-    model = Request
+class ReportService(BaseCRUDService):
+    model = Report

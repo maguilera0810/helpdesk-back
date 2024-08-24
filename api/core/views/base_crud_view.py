@@ -20,23 +20,27 @@ class BaseCRUDView(viewsets.ViewSet):
         data = request.GET.dict()
         filters = FilterUtil.get_list_filters(data=data)
         items = self.srv_class.get_all(**filters)
-        serializer = self.serial_class(items, many=True)
+        serializer = self.serial_class(items, many=True,
+                                       context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         """Create a new item"""
-        serializer = self.serial_class(data=request.data)
+        serializer = self.serial_class(data=request.data,
+                                       context={"request": request})
         if serializer.is_valid():
             item = serializer.save()
             if hasattr(self.srv_class, "set_translation_keys"):
-                self.srv_class.set_translation_keys(instance=item, keys=["translation_key"])
+                self.srv_class.set_translation_keys(instance=item,
+                                                    keys=["translation_key"])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, id: int, *args, **kwargs):
         """Retrieve a specific item by ID"""
         if item := self.srv_class.get_one(id=id):
-            serializer = self.serial_class(item)
+            serializer = self.serial_class(item,
+                                           context={"request": request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({}, status=status.HTTP_404_NOT_FOUND)
 
@@ -46,7 +50,8 @@ class BaseCRUDView(viewsets.ViewSet):
         if not item:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
         data = request.data
-        serializer = self.serial_class(item, data=data, partial=True)
+        serializer = self.serial_class(item, data=data, partial=True,
+                                       context={"request": request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)

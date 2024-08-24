@@ -1,12 +1,105 @@
 # .\api\authentication\serializers\auth_serializers.py
-from django.contrib.auth.models import User
-from rest_framework import serializers
+from copy import deepcopy
 
+from django.contrib.auth.models import User
+from django.db import transaction
+from rest_framework.serializers import (CharField, EmailField, ModelSerializer,
+                                        Serializer, ValidationError)
+
+from api.core.serializers.base_serializer import BaseSerializer
 from apps.authentication.models import Profile
 from apps.authentication.serializers import ProfileSerializer
+from resources.enums import ValidatorMsgEnum
+from resources.validators.field_validator import FieldValidator
 
 
-class ProfilePublicSerializer(serializers.ModelSerializer):
+class UserPublicSerializer(ModelSerializer):
+    profile = ProfileSerializer(required=False, read_only=True)
+
+    class Meta:
+        model = User
+        exclude = ("password",)
+
+
+class ProfileCrudSerializer(BaseSerializer):
+    class Meta:
+        model = Profile
+        fields = "__all__"
+
+    def validate_document(self, value):
+        """
+        Validate that the document is unique.
+        """
+        query = Profile.objects.filter(document=value)
+        if self.instance:
+            if query.exclude(id=self.instance.id).exists():
+                raise ValidationError(ValidatorMsgEnum.DOCUMENT_ALREADY_EXIST)
+        elif query.exists():
+            raise ValidationError(ValidatorMsgEnum.USER_ALREADY_EXIST)
+        return value
+
+
+class UserCrudSerializer(BaseSerializer):
+    password = CharField(write_only=True, required=False)
+
+    class Meta:
+        model = User
+        fields = "__all__"
+        extra_kwargs = {
+            "password": {"write_only": True},
+        }
+
+    def validate_email(self, value):
+        is_ok, msg = FieldValidator.validate_email(value)
+        if not is_ok:
+            raise ValidationError(msg)
+        query = User.objects.filter(email=value)
+        if self.instance:
+            if query.exclude(id=self.instance.id).exists():
+                raise ValidationError(ValidatorMsgEnum.EMAIL_ALREADY_EXIST)
+        elif query.exists():
+            raise ValidationError(ValidatorMsgEnum.USER_ALREADY_EXIST)
+        return value
+
+    def validate_password(self, value):
+        if self.instance is None and not value:
+            raise ValidationError(ValidatorMsgEnum.PASSWORD_REQUIRED)
+        if value:
+            is_ok, msg = FieldValidator.validate_password(value)
+            if not is_ok:
+                raise ValidationError(msg)
+        return value
+
+    def validate_superuser(self, data: dict, request_user: User):
+        if request_user.is_superuser:
+            return
+        if self.instance and request_user.id != self.instance.id:
+            raise ValidationError(ValidatorMsgEnum.DONT_HAVE_PERMISSION)
+        restricted_fields = ("is_staff", "is_active", "is_superuser")
+        for field in restricted_fields:
+            if field in data:
+                raise ValidationError(
+                    {field: ValidatorMsgEnum.DONT_HAVE_PERMISSION})
+
+    def validate(self, data: dict):
+        request_user = self.validate_request_user()
+        self.validate_superuser(data=data,
+                                request_user=request_user)
+        return data
+
+    @transaction.atomic
+    def save(self, **kwargs):
+        """
+        Overriding save method to handle password update.
+        """
+        user = super().save(**kwargs)
+        if password := self.validated_data.get('password', None):
+            user.set_password(password)
+            user.save()
+        return user
+
+
+class ProfilePublicSerializer(ModelSerializer):
 
     class Meta:
         model = Profile
@@ -15,11 +108,10 @@ class ProfilePublicSerializer(serializers.ModelSerializer):
             "document_type",
             "phone",
             "address",
-            "is_available",
-            "external_code")
+            "is_available")
 
 
-class UserPublicSerializer(serializers.ModelSerializer):
+class UserAdminListSerializer(ModelSerializer):
     profile = ProfilePublicSerializer()
 
     class Meta:
@@ -34,48 +126,23 @@ class UserPublicSerializer(serializers.ModelSerializer):
         )
 
 
-class UserAdminSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer()
-
-    class Meta:
-        model = User
-        exclude = (
-            "password",
-        )
-
-
-class UserAdminListSerializer(serializers.ModelSerializer):
-    profile = ProfilePublicSerializer()
-
-    class Meta:
-        model = User
-        fields = (
-            "id",
-            "username",
-            "first_name",
-            "last_name",
-            "email",
-            "profile",
-        )
-
-
-class CustomAuthTokenSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=False)
-    document = serializers.CharField(required=False)
-    password = serializers.CharField(write_only=True)
+class CustomAuthTokenSerializer(Serializer):
+    email = EmailField(required=False)
+    document = CharField(required=False)
+    password = CharField(write_only=True)
 
     def validate(self, attrs):
         email = attrs.get("email")
         document = attrs.get("document")
         password = attrs.get("password")
         if not email and not document:
-            raise serializers.ValidationError("Invalid credentials")
+            raise ValidationError("Invalid credentials")
         user = None
         if email:
             user = User.objects.filter(email=email).first()
         elif document:
             user = User.objects.filter(profile__document=document).first()
         if user is None or not user.check_password(password):
-            raise serializers.ValidationError("Invalid credentials.")
+            raise ValidationError("Invalid credentials.")
         attrs["user"] = user
         return attrs
