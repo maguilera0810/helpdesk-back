@@ -119,21 +119,23 @@ class Report(AuditModel):
     content = models.TextField()
 
 
-MODELS = [
+MANAGEMENT_MODELS = [
     Plan,
+    Issue,
+    IssueFile,
+    Report,
+    RequestingUnit,
     ScheduledTask,
     Task,
-    RequestingUnit,
-    Issue,
     TaskHistory,
-    Report,
 ]
-MODEL_TYPES = Union[
+MANAGEMENT_MODEL_TYPES = Union[
     Plan,
+    Issue,
+    IssueFile,
+    Report,
+    RequestingUnit,
     ScheduledTask,
     Task,
-    RequestingUnit,
-    Issue,
     TaskHistory,
-    Report,
 ]

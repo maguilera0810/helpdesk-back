@@ -40,12 +40,12 @@ class Skill(BaseInfoModel):
         return self.name
 
 
-MODELS = [
+COMMON_MODELS = [
     Category,
     Skill,
     Tag,
 ]
-MODEL_TYPES = Union[
+COMMON_MODEL_TYPES = Union[
     Category,
     Skill,
     Tag,
