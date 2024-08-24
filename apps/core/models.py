@@ -5,11 +5,13 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+from resources.enums import StoragePathEnum
 
 ENV = settings.ENV
 
 
 class BaseModel(models.Model):
+
     class Meta:
         abstract = True
 
@@ -53,3 +55,18 @@ class BaseInfoModel(BaseModel):
 
     class Meta:
         abstract = True
+
+
+class StorageModel(BaseModel):
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def get_key(cls):
+        return cls.__name__.lower()
+
+    def get_path_storage(self, key: str = "", sufix: str = "") -> str | None:
+        key = key or self.__class__.__name__.lower()
+        attr = key + sufix
+        if path := getattr(StoragePathEnum, attr, None):
+            return path.replace("<env>", ENV).replace(f"<{key}_id>", str(self.pk))
