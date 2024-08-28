@@ -54,8 +54,6 @@ class Issue(BaseInfoModel, AuditModel):
                                    on_delete=models.DO_NOTHING, editable=False)
     contact_email = models.CharField(max_length=100, blank=True)
     contact_phone = models.CharField(max_length=10, blank=True)
-    requesting_unit = models.ForeignKey("management.RequestingUnit", on_delete=models.CASCADE,
-                                        related_name="requests")
 
 
 class IssueFile(BaseInfoModel, AuditModel, StorageModel):
