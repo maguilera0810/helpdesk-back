@@ -22,7 +22,7 @@ class Task(BaseInfoModel, AuditModel):
         Modelo para tareas de mantenimiento
     """
     code = models.CharField(max_length=37, editable=False, blank=False,
-                            db_index=True,  unique=True)
+                            db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
     type = models.CharField(max_length=50, choices=TaskTypeEnum.choices,
                             default=TaskTypeEnum.PREVENTIVE)
     status = models.CharField(max_length=50, choices=TaskStatusEnum.choices,
@@ -42,8 +42,8 @@ class Task(BaseInfoModel, AuditModel):
 
 
 class Issue(BaseInfoModel, AuditModel):
-    code = models.CharField(max_length=37, editable=False, blank=False,
-                            db_index=True,  unique=True)
+    code = models.CharField(max_length=38, editable=False, blank=False,
+                            db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
     task = models.OneToOneField("management.Task", on_delete=models.DO_NOTHING,
                                 null=True, blank=True, related_name="issue")
     categories = models.ManyToManyField("common.Category", blank=True,
