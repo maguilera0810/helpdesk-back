@@ -17,9 +17,9 @@ class Profile(models.Model):
     is_available = models.BooleanField(default=True)
 
 
-MODELS = [
+AUTH_MODELS = [
     Profile,
 ]
-MODEL_TYPES = Union[
+AUTH_MODEL_TYPES = Union[
     Profile,
 ]

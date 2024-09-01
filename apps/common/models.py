@@ -12,7 +12,7 @@ from resources.enums import CategoryTypeEnum
 class Tag(BaseInfoModel):
 
     code = models.CharField(max_length=35, editable=False, blank=False,
-                            db_index=True,  unique=True)
+                            db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
     color = models.CharField(max_length=7,
                              validators=[color_validator],
                              help_text="Formato hexadecimal (ej. #FF00AA)")
@@ -21,7 +21,7 @@ class Tag(BaseInfoModel):
 class Category(BaseInfoModel):
 
     code = models.CharField(max_length=41, editable=False, blank=False,
-                            db_index=True,  unique=True)
+                            db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
     type = models.CharField(max_length=30, choices=CategoryTypeEnum.choices,
                             default=CategoryTypeEnum.SKILL)
     relations = models.ManyToManyField("common.Category", blank=True)
@@ -33,19 +33,19 @@ class Category(BaseInfoModel):
 class Skill(BaseInfoModel):
 
     code = models.CharField(max_length=37, editable=False, blank=False,
-                            db_index=True,  unique=True)
+                            db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
     profiles = models.ManyToManyField("common.Skill", related_name="skills")
 
     def __str__(self):
         return self.name
 
 
-MODELS = [
+COMMON_MODELS = [
     Category,
     Skill,
     Tag,
 ]
-MODEL_TYPES = Union[
+COMMON_MODEL_TYPES = Union[
     Category,
     Skill,
     Tag,

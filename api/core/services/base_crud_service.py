@@ -5,16 +5,16 @@ from typing import Optional
 from django.db import transaction
 
 from api.core.services.base_service import BaseService
-from apps.authentication.models import MODEL_TYPES as AUTH_MODEL_TYPES
-from apps.common.models import MODEL_TYPES as COMMON_MODEL_TYPES
-from apps.management.models import MODEL_TYPES as MANAGE_MODEL_TYPES
+from apps.authentication.models import AUTH_MODEL_TYPES
+from apps.common.models import COMMON_MODEL_TYPES
+from apps.management.models import MANAGEMENT_MODEL_TYPES
 from resources.helpers.file_helper import FileHelper
 
-MODEL_TYPES = AUTH_MODEL_TYPES | COMMON_MODEL_TYPES | MANAGE_MODEL_TYPES
+ALL_MODEL_TYPES = AUTH_MODEL_TYPES | COMMON_MODEL_TYPES | MANAGEMENT_MODEL_TYPES
 
 
 class BaseCRUDService(BaseService):
-    model: Optional[MODEL_TYPES] = None
+    model: Optional[ALL_MODEL_TYPES] = None
     storage = None
 
     @classmethod

@@ -22,7 +22,7 @@ class Task(BaseInfoModel, AuditModel):
         Modelo para tareas de mantenimiento
     """
     code = models.CharField(max_length=37, editable=False, blank=False,
-                            db_index=True,  unique=True)
+                            db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
     type = models.CharField(max_length=50, choices=TaskTypeEnum.choices,
                             default=TaskTypeEnum.PREVENTIVE)
     status = models.CharField(max_length=50, choices=TaskStatusEnum.choices,
@@ -39,11 +39,13 @@ class Task(BaseInfoModel, AuditModel):
                              on_delete=models.DO_NOTHING, null=True)
     scheduled = models.ForeignKey("management.ScheduledTask", on_delete=models.SET_NULL,
                                   related_name="scheduled_tasks", null=True, blank=True)
+    categories = models.ManyToManyField("common.Category", blank=True,
+                                        related_name="tasks")
 
 
 class Issue(BaseInfoModel, AuditModel):
-    code = models.CharField(max_length=37, editable=False, blank=False,
-                            db_index=True,  unique=True)
+    code = models.CharField(max_length=38, editable=False, blank=False,
+                            db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
     task = models.OneToOneField("management.Task", on_delete=models.DO_NOTHING,
                                 null=True, blank=True, related_name="issue")
     categories = models.ManyToManyField("common.Category", blank=True,
@@ -54,8 +56,6 @@ class Issue(BaseInfoModel, AuditModel):
                                    on_delete=models.DO_NOTHING, editable=False)
     contact_email = models.CharField(max_length=100, blank=True)
     contact_phone = models.CharField(max_length=10, blank=True)
-    requesting_unit = models.ForeignKey("management.RequestingUnit", on_delete=models.CASCADE,
-                                        related_name="requests")
 
 
 class IssueFile(BaseInfoModel, AuditModel, StorageModel):
@@ -119,21 +119,23 @@ class Report(AuditModel):
     content = models.TextField()
 
 
-MODELS = [
+MANAGEMENT_MODELS = [
     Plan,
+    Issue,
+    IssueFile,
+    Report,
+    RequestingUnit,
     ScheduledTask,
     Task,
-    RequestingUnit,
-    Issue,
     TaskHistory,
-    Report,
 ]
-MODEL_TYPES = Union[
+MANAGEMENT_MODEL_TYPES = Union[
     Plan,
+    Issue,
+    IssueFile,
+    Report,
+    RequestingUnit,
     ScheduledTask,
     Task,
-    RequestingUnit,
-    Issue,
     TaskHistory,
-    Report,
 ]

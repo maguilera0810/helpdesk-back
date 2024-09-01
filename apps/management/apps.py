@@ -7,4 +7,4 @@ class ManagementConfig(AppConfig):
     label = "management"
 
     def ready(self):
-        import apps.management.signals  # noqa: F401
+        import apps.core.signals  # noqa: F401
