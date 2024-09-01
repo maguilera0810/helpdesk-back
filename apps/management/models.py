@@ -39,6 +39,8 @@ class Task(BaseInfoModel, AuditModel):
                              on_delete=models.DO_NOTHING, null=True)
     scheduled = models.ForeignKey("management.ScheduledTask", on_delete=models.SET_NULL,
                                   related_name="scheduled_tasks", null=True, blank=True)
+    categories = models.ManyToManyField("common.Category", blank=True,
+                                        related_name="tasks")
 
 
 class Issue(BaseInfoModel, AuditModel):
