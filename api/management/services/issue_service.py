@@ -36,5 +36,7 @@ class IssueService(BaseCRUDService):
                                     context={"request": request})
         if not serializer.is_valid():
             return serializer.errors, None
-        serializer.save()
+        issue.task = serializer.save()
+        issue.status = IssueStatusEnum.TASK_CREATED
+        issue.save()
         return None, serializer.data
