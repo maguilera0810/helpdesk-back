@@ -11,9 +11,9 @@ class TaskPriorityEnum(TextChoices):
 
 
 class IssueStatusEnum(TextChoices):
-    TO_DO = "to_do", _("to_do")
-    IN_PROGRESS = "in_progress", _("in_progress")
-    BLOCKED = "blocked", _("blocked")
+    RECEIVED = "received", _("received")
+    TASK_CREATED = "task_created", _("task_created")
+    REJECTED = "rejected", _("rejected")
     TO_VALIDATE = "to_validate", _("to_validate")
     COMPLETED = "completed", _("completed")
 

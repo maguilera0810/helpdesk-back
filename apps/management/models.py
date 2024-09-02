@@ -51,7 +51,7 @@ class Issue(BaseInfoModel, AuditModel):
     categories = models.ManyToManyField("common.Category", blank=True,
                                         related_name="issues")
     status = models.CharField(max_length=50, choices=IssueStatusEnum.choices,
-                              default=IssueStatusEnum.TO_DO)
+                              default=IssueStatusEnum.RECEIVED)
     created_by = models.ForeignKey("auth.User", related_name="created_issues",
                                    on_delete=models.DO_NOTHING, editable=False)
     contact_email = models.CharField(max_length=100, blank=True)
