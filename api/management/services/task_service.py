@@ -31,8 +31,8 @@ class TaskService(BaseCRUDService):
         - created_at
         - updated_at
         """
-        serializer = TaskSerializer(data, partial=True, context={
-            "request_user": self.user})
+        serializer = TaskSerializer(data, partial=True,
+                                    context={"request_user": self.user})
         if serializer.is_valid():
             serializer.save()
             return serializer.data, None
