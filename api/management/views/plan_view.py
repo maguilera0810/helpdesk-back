@@ -1,3 +1,4 @@
+# .\api\management\views\plan_view.py
 from api.core.views.base_crud_view import BaseCRUDView
 from api.core.views.base_permission_view import IsAuthenticatedView
 from api.management.services.plan_service import PlanService

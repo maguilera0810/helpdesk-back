@@ -1,4 +1,4 @@
-# .\api\common\services\skill_service.py
+# .\api\common\services\category_service.py
 from api.core.services.base_crud_service import BaseCRUDService
 from apps.common.models import Category
 

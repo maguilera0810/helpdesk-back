@@ -1,4 +1,4 @@
-# .\apps\common\serializers.py
+# .\api\common\serializers\skill_serializer.py
 from django.db import transaction
 
 from api.core.serializers.base_serializer import BaseSerializer

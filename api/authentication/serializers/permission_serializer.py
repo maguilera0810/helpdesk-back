@@ -1,4 +1,4 @@
-# .\api\authentication\serializers\auth_serializers.py
+# .\api\authentication\serializers\permission_serializer.py
 from django.contrib.auth.models import Permission
 
 from api.core.serializers.base_serializer import BaseSerializer

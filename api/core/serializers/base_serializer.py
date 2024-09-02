@@ -1,3 +1,4 @@
+# .\api\core\serializers\base_serializer.py
 from rest_framework.serializers import ModelSerializer, ValidationError
 
 

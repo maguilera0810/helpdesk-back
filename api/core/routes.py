@@ -1,3 +1,4 @@
+# .\api\core\routes.py
 from django.urls import path
 from django.utils.text import slugify
 
