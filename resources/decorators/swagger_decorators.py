@@ -15,7 +15,11 @@ def custom_swagger_schema(serializer_class: ModelSerializer):
     model_name = model.__name__
     app_name = model._meta.app_label
 
-    def swagger_schema(action: str = None, description: str = None, responses: dict[int, any] = None, tag: str = ""):
+    def swagger_schema(action: str = None,
+                       description: str = None,
+                       responses: dict[int, any] = None,
+                       tag: str = None,
+                       custom_body: dict = None):
         if not responses:
             responses = {}
         RESPONSES = {
@@ -73,7 +77,7 @@ def custom_swagger_schema(serializer_class: ModelSerializer):
 
             swagger_auto_schema(operation_description=operation_description,
                                 tags=[tag or f"{app_name}.{model_name}"],
-                                request_body=request_body,
+                                request_body=custom_body or request_body,
                                 responses={**_responses, **responses})(func)
             return func
 
