@@ -4,12 +4,14 @@ from typing import Union
 from django.db import models
 
 from apps.core.models import (AuditModel, BaseInfoModel, BaseModel,
-                              PeriodModel, StorageModel)
+                              PeriodDateModel, PeriodDateTimeModel, StorageModel)
 from resources.enums import (IssueStatusEnum, TaskPriorityEnum, TaskStatusEnum,
                              TaskTypeEnum)
 
+MODEL_TASK = "management.Task"
 
-class Plan(BaseInfoModel, PeriodModel):
+
+class Plan(BaseInfoModel, PeriodDateModel):
     """
         Modelo para plan de mantenimiento
     """
@@ -37,16 +39,19 @@ class Task(BaseInfoModel, AuditModel):
                                   blank=True)
     plan = models.ForeignKey("management.Plan", related_name="tasks",
                              on_delete=models.DO_NOTHING, null=True)
-    scheduled = models.ForeignKey("management.ScheduledTask", on_delete=models.SET_NULL,
-                                  related_name="scheduled_tasks", null=True, blank=True)
     categories = models.ManyToManyField("common.Category", blank=True,
                                         related_name="tasks")
+
+
+class TaskSchedule(PeriodDateTimeModel):
+    task = models.OneToOneField("management.Task", on_delete=models.SET_NULL, null=True,
+                                blank=True, related_name="schedule")
 
 
 class Issue(BaseInfoModel, AuditModel):
     code = models.CharField(max_length=38, editable=False, blank=False,
                             db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
-    task = models.OneToOneField("management.Task", on_delete=models.DO_NOTHING,
+    task = models.OneToOneField(MODEL_TASK, on_delete=models.DO_NOTHING,
                                 null=True, blank=True, related_name="issue")
     categories = models.ManyToManyField("common.Category", blank=True,
                                         related_name="issues")
@@ -66,7 +71,7 @@ class IssueFile(BaseInfoModel, AuditModel, StorageModel):
                                    on_delete=models.DO_NOTHING, editable=False)
 
 
-class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
+class ScheduledTask(BaseInfoModel, AuditModel, PeriodDateModel):
     plan = models.ForeignKey("management.Plan", related_name="scheduled_tasks",
                              on_delete=models.DO_NOTHING, null=False, blank=False)
     priority = models.CharField(max_length=50, choices=TaskPriorityEnum.choices,
@@ -82,7 +87,7 @@ class ScheduledTask(BaseInfoModel, AuditModel, PeriodModel):
 
 
 class TaskComment(AuditModel):
-    task = models.ForeignKey("management.Task", related_name="comments", on_delete=models.CASCADE,
+    task = models.ForeignKey(MODEL_TASK, related_name="comments", on_delete=models.CASCADE,
                              null=True, blank=True)
     author = models.ForeignKey("auth.User", related_name="comments", on_delete=models.DO_NOTHING,
                                null=True, blank=True)
@@ -102,7 +107,7 @@ class TaskHistory(BaseModel):
     """ 
         Modelo para historial de tareas
     """
-    task = models.ForeignKey("management.Task", on_delete=models.DO_NOTHING,
+    task = models.ForeignKey(MODEL_TASK, on_delete=models.DO_NOTHING,
                              related_name="history")
     status = models.CharField(max_length=50, choices=TaskStatusEnum.choices)
     changed_at = models.DateTimeField(auto_now_add=True)
@@ -114,7 +119,7 @@ class Report(AuditModel):
     """
         Modelo para informes
     """
-    task = models.ForeignKey("management.Task", on_delete=models.DO_NOTHING,
+    task = models.ForeignKey(MODEL_TASK, on_delete=models.DO_NOTHING,
                              related_name="reports")
     content = models.TextField()
 
