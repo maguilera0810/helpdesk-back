@@ -23,6 +23,9 @@ class TaskStatusEnum(TextChoices):
     TO_DO = "to_do", _("to_do")
     IN_PROGRESS = "in_progress", _("in_progress")
     BLOCKED = "blocked", _("blocked")
+    SCHEDULED = "scheduled", _("scheduled")
+    RESCHEDULED = "rescheduled", _("rescheduled")
+    EXECUTED = "executed", _("executed")
     TO_VALIDATE = "to_validate", _("to_validate")
     COMPLETED = "completed", _("completed")
 
