@@ -41,9 +41,17 @@ class AuditModel(BaseModel):
         return result
 
 
-class PeriodModel(BaseModel):
+class PeriodDateModel(BaseModel):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+
+class PeriodDateTimeModel(BaseModel):
+    start_at = models.DateTimeField()
+    end_at = models.DateTimeField()
 
     class Meta:
         abstract = True
