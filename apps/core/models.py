@@ -50,8 +50,8 @@ class PeriodDateModel(BaseModel):
 
 
 class PeriodDateTimeModel(BaseModel):
-    start_at = models.DateTimeField()
-    end_at = models.DateTimeField()
+    start_at = models.DateTimeField(blank=True, null=True)
+    end_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         abstract = True

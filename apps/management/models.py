@@ -4,7 +4,8 @@ from typing import Union
 from django.db import models
 
 from apps.core.models import (AuditModel, BaseInfoModel, BaseModel,
-                              PeriodDateModel, PeriodDateTimeModel, StorageModel)
+                              PeriodDateModel, PeriodDateTimeModel,
+                              StorageModel)
 from resources.enums import (IssueStatusEnum, TaskPriorityEnum, TaskStatusEnum,
                              TaskTypeEnum)
 
@@ -19,7 +20,7 @@ class Plan(BaseInfoModel, PeriodDateModel):
                                     related_name="plans")
 
 
-class Task(BaseInfoModel, AuditModel):
+class Task(BaseInfoModel, AuditModel, PeriodDateTimeModel):
     """
         Modelo para tareas de mantenimiento
     """
@@ -41,11 +42,6 @@ class Task(BaseInfoModel, AuditModel):
                              on_delete=models.DO_NOTHING, null=True)
     categories = models.ManyToManyField("common.Category", blank=True,
                                         related_name="tasks")
-
-
-class TaskSchedule(PeriodDateTimeModel):
-    task = models.OneToOneField("management.Task", on_delete=models.SET_NULL, null=True,
-                                blank=True, related_name="schedule")
 
 
 class Issue(BaseInfoModel, AuditModel):
