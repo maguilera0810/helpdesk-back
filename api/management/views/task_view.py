@@ -35,3 +35,20 @@ class TaskView(BaseCRUDView, IsAuthenticatedView):
     @schema(action="destroy")
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
+
+    @schema(action="retrieve_schedules",
+            description="Create a Task from a Issue",
+            responses={status.HTTP_200_OK: "OK",
+                       status.HTTP_201_CREATED: "CREATED",
+                       status.HTTP_400_BAD_REQUEST: "BAD_REQUEST"})
+    def retrieve_schedules(self, request):
+        data = request.data
+        responsible_id = data["responsible_id"]
+        team = data["team"]
+        start_at = data["start_at"]
+        end_at = data["end_at"]
+        schedules = self.srv_class.retrieve_schedules(responsible_id=responsible_id,
+                                                      team=team,
+                                                      start_at=start_at,
+                                                      end_at=end_at)
+        return Response(schedules, status=status.HTTP_200_OK)
