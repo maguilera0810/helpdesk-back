@@ -9,8 +9,8 @@ from api.management.views.task_view import TaskView
 
 urlpatterns = [
     *get_crud_route("plan", PlanView),
-    path("task/schedules/",
-         TaskView.as_view({"post": "retrieve_schedules"})),
+    path("task/schedule/",
+         TaskView.as_view({"post": "retrieve_schedule"})),
     *get_crud_route("task", TaskView),
     path("issue/<int:id>/create-task/",
          IssueView.as_view({"post": "create_task"})),
