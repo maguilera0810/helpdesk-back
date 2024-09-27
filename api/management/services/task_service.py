@@ -1,10 +1,8 @@
 # .\api\management\services\task_service.py
-from collections import defaultdict
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
@@ -114,6 +112,7 @@ class TaskService(BaseCRUDService):
 
     @classmethod
     def __check_task_collision(cls, curr_task_id: int, task: dict, start_at: datetime, end_at: datetime):
-        task["has_collision"] = (task["id"] != curr_task_id and
-                                 task["start_at"] <= end_at and
-                                 task["end_at"] <= start_at)
+        has_collision = (task["id"] != curr_task_id
+                         and max(task["start_at"], start_at) < min(task["end_at"], end_at))
+        task["has_collision"] = has_collision
+        return has_collision
