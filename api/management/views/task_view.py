@@ -47,8 +47,10 @@ class TaskView(BaseCRUDView, IsAuthenticatedView):
         team = data["team"]
         start_at = data["start_at"]
         end_at = data["end_at"]
+        curr_task_id = data.get("curr_task_id")
         schedules = self.srv_class.retrieve_schedule(responsible_id=responsible_id,
-                                                      team=team,
-                                                      start_at=start_at,
-                                                      end_at=end_at)
+                                                     team=team,
+                                                     start_at=start_at,
+                                                     end_at=end_at,
+                                                     curr_task_id=curr_task_id)
         return Response(schedules, status=status.HTTP_200_OK)
