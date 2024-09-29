@@ -43,7 +43,6 @@ class Task(BaseInfoModel, AuditModel, PeriodDateTimeModel):
     categories = models.ManyToManyField("common.Category", blank=True,
                                         related_name="tasks")
 
-
 class Issue(BaseInfoModel, AuditModel):
     code = models.CharField(max_length=38, editable=False, blank=False,
                             db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")

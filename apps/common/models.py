@@ -1,12 +1,10 @@
 # .\apps\common\models.py
 from typing import Union
 
-from django.core.validators import RegexValidator
 from django.db import models
 
 from apps.common.validators import color_validator
-from apps.management.models import BaseInfoModel, BaseModel
-from resources.enums import CategoryTypeEnum
+from apps.management.models import BaseInfoModel
 
 
 class Tag(BaseInfoModel):
@@ -18,12 +16,16 @@ class Tag(BaseInfoModel):
                              help_text="Formato hexadecimal (ej. #FF00AA)")
 
 
+class CategoryType(BaseInfoModel):
+    ...
+
+
 class Category(BaseInfoModel):
 
     code = models.CharField(max_length=41, editable=False, blank=False,
                             db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
-    type = models.CharField(max_length=30, choices=CategoryTypeEnum.choices,
-                            default=CategoryTypeEnum.SKILL)
+    # type = models.ForeignKey("common.CategoryType", null=False,
+    #                          on_delete=models.DO_NOTHING)
     relations = models.ManyToManyField("common.Category", blank=True)
     color = models.CharField(max_length=7,
                              validators=[color_validator],
