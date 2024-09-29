@@ -24,8 +24,8 @@ class Category(BaseInfoModel):
 
     code = models.CharField(max_length=41, editable=False, blank=False,
                             db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
-    # type = models.ForeignKey("common.CategoryType", null=False,
-    #                          on_delete=models.DO_NOTHING)
+    type = models.ForeignKey("common.CategoryType", null=True,
+                             on_delete=models.DO_NOTHING)
     relations = models.ManyToManyField("common.Category", blank=True)
     color = models.CharField(max_length=7,
                              validators=[color_validator],
