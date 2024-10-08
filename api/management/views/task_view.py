@@ -37,10 +37,8 @@ class TaskView(BaseCRUDView, IsAuthenticatedView):
         return super().destroy(request, *args, **kwargs)
 
     @schema(action="retrieve_schedule",
-            description="Create a Task from a Issue",
-            responses={status.HTTP_200_OK: "OK",
-                       status.HTTP_201_CREATED: "CREATED",
-                       status.HTTP_400_BAD_REQUEST: "BAD_REQUEST"})
+            description="Retrieve scheedules and detect collisions",
+            responses={status.HTTP_200_OK: "OK"})
     def retrieve_schedule(self, request):
         data = request.data
         responsible_id = data["responsible_id"]
@@ -54,3 +52,14 @@ class TaskView(BaseCRUDView, IsAuthenticatedView):
                                                      end_at=end_at,
                                                      curr_task_id=curr_task_id)
         return Response(schedules, status=status.HTTP_200_OK)
+
+    @schema(action="tracking_tasks",
+            description="Retrieve scheedules to tracking",
+            responses={status.HTTP_200_OK: "OK"})
+    def tracking_tasks(self, request):
+        data = request.data
+        team = data["team"]
+        curr_date = data["curr_date"]
+        tracking = self.srv_class.tracking_tasks(team=team,
+                                                 curr_date=curr_date)
+        return Response(tracking, status=status.HTTP_200_OK)

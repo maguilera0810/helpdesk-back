@@ -11,6 +11,8 @@ urlpatterns = [
     *get_crud_route("plan", PlanView),
     path("task/schedule/",
          TaskView.as_view({"post": "retrieve_schedule"})),
+    path("task/tracking/",
+         TaskView.as_view({"post": "tracking_tasks"})),
     *get_crud_route("task", TaskView),
     path("issue/<int:id>/create-task/",
          IssueView.as_view({"post": "create_task"})),

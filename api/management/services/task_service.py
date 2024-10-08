@@ -1,5 +1,5 @@
 # .\api\management\services\task_service.py
-from datetime import datetime
+from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
 from django.conf import settings
@@ -65,8 +65,8 @@ class TaskService(BaseCRUDService):
         start_at = timezone.make_aware(start_at, timezone=timezone.utc)
         end_at = timezone.make_aware(end_at, timezone=timezone.utc)
 
-        # start_at = start_at.astimezone(LOCAL_TZ)
-        # end_at = end_at.astimezone(LOCAL_TZ)
+        start_at = start_at.astimezone(LOCAL_TZ)
+        end_at = end_at.astimezone(LOCAL_TZ)
 
         start_date = start_at.date()
         end_date = end_at.date()
@@ -103,12 +103,39 @@ class TaskService(BaseCRUDService):
         }
 
     @classmethod
-    def __query_tasks(cls, user_id, start_date, end_date):
-        return Task.objects.filter(Q(responsible__id=user_id) | Q(team__id=user_id))\
-            .exclude(Q(start_at=None) | Q(end_at=None))\
-            .filter(Q(start_at__date__gte=start_date, start_at__date__lte=end_date) |
-                    Q(end_at__date__gte=start_date, end_at__date__lte=end_date))\
-            .values("id", "title", "start_at", "end_at").order_by("start_at").distinct()
+    def __query_tasks(cls,
+                      user_id: int,
+                      start_date: date = None,
+                      end_date: date = None,
+                      curr_date: date = None,
+                      params: tuple[str] = None):
+        params = params or ("id", "title", "start_at", "end_at")
+        base_query = Task.objects.filter(Q(responsible__id=user_id) | Q(team__id=user_id))\
+            .exclude(Q(start_at=None) | Q(end_at=None))
+        if curr_date:
+            return base_query.filter(start_at__date=curr_date, end_at__date=curr_date)\
+                .values(*params).order_by("start_at").distinct()
+        return base_query.filter(Q(start_at__date__gte=start_date, start_at__date__lte=end_date) |
+                                 Q(end_at__date__gte=start_date, end_at__date__lte=end_date))\
+            .values(*params).order_by("start_at").distinct()
+
+    @classmethod
+    def __get_min_max_time(cls,
+                           user_id: int,
+                           curr_date: date,
+                           params: tuple[str] = None):
+        params = params or ("id", "title", "start_at", "end_at")
+        base_query = Task.objects.filter(Q(responsible__id=user_id) | Q(team__id=user_id))\
+            .exclude(Q(start_at=None) | Q(end_at=None))
+        times = {}
+        if min_time := base_query.filter(start_at__date=curr_date, end_at__date=curr_date)\
+                .values_list("start_at", flat=True).order_by("start_at").first():
+            times["min_time"] = min_time
+        if max_time := base_query.filter(start_at__date=curr_date, end_at__date=curr_date)\
+                .values_list("end_at", flat=True).order_by("-end_at").first():
+            print(f"{max_time=}")
+            times["max_time"] = max_time
+        return times
 
     @classmethod
     def __check_task_collision(cls, curr_task_id: int, task: dict, start_at: datetime, end_at: datetime):
@@ -116,3 +143,25 @@ class TaskService(BaseCRUDService):
                          and max(task["start_at"], start_at) < min(task["end_at"], end_at))
         task["has_collision"] = has_collision
         return has_collision
+
+    @classmethod
+    def tracking_tasks(cls, team: list[int], curr_date: str):
+        user_tasks = []
+        params = ("id", "title", "start_at", "end_at",
+                  "status", "priority", "categories")
+        if not isinstance(curr_date, datetime):
+            curr_date = datetime.strptime(curr_date, DATE_FORMAT)
+        curr_date_aware = timezone.make_aware(curr_date, timezone=timezone.utc)
+        curr_date_aware_tz = curr_date_aware.astimezone(LOCAL_TZ)
+        for user_id in team:
+            team_tasks = cls.__query_tasks(user_id=user_id,
+                                           curr_date=curr_date_aware_tz.date(),
+                                           params=params)
+            user_tasks.append({"user_id": user_id,
+                              "tasks": team_tasks})
+        times = cls.__get_min_max_time(user_id=user_id,
+                                       curr_date=curr_date_aware_tz.date())
+        return {
+            "user_tasks": user_tasks,
+            **times,
+        }
