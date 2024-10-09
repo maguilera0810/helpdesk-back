@@ -38,8 +38,13 @@ class Skill(BaseInfoModel):
                             db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
     profiles = models.ManyToManyField("common.Skill", related_name="skills")
 
-    def __str__(self):
-        return self.name
+
+class Priority(BaseInfoModel):
+    ...
+    icon = models.CharField(max_length=30, blank=True)
+    color = models.CharField(max_length=7,
+                             validators=[color_validator],
+                             help_text="Formato hexadecimal (ej. #FF00AA)")
 
 
 COMMON_MODELS = [
