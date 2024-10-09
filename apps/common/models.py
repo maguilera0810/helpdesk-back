@@ -4,32 +4,26 @@ from typing import Union
 from django.db import models
 
 from apps.common.validators import color_validator
-from apps.management.models import BaseInfoModel
+from apps.core.models import BaseInfoModel, ColorModel
 
 
-class Tag(BaseInfoModel):
+class Tag(BaseInfoModel, ColorModel):
 
     code = models.CharField(max_length=35, editable=False, blank=False,
                             db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
-    color = models.CharField(max_length=7,
-                             validators=[color_validator],
-                             help_text="Formato hexadecimal (ej. #FF00AA)")
 
 
 class CategoryType(BaseInfoModel):
     ...
 
 
-class Category(BaseInfoModel):
+class Category(BaseInfoModel, ColorModel):
 
     code = models.CharField(max_length=41, editable=False, blank=False,
                             db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
     type = models.ForeignKey("common.CategoryType", null=True,
                              on_delete=models.DO_NOTHING)
     relations = models.ManyToManyField("common.Category", blank=True)
-    color = models.CharField(max_length=7,
-                             validators=[color_validator],
-                             help_text="Formato hexadecimal (ej. #FF00AA)")
 
 
 class Skill(BaseInfoModel):
@@ -39,12 +33,10 @@ class Skill(BaseInfoModel):
     profiles = models.ManyToManyField("common.Skill", related_name="skills")
 
 
-class Priority(BaseInfoModel):
-    ...
+class Priority(BaseInfoModel, ColorModel):
+
     icon = models.CharField(max_length=30, blank=True)
-    color = models.CharField(max_length=7,
-                             validators=[color_validator],
-                             help_text="Formato hexadecimal (ej. #FF00AA)")
+    value = models.SmallIntegerField(unique=True)
 
 
 COMMON_MODELS = [

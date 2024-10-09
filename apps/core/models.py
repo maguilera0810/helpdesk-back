@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+from apps.core.validators import color_validator
 from resources.enums import StoragePathEnum
 
 ENV = settings.ENV
@@ -52,6 +53,15 @@ class PeriodDateModel(BaseModel):
 class PeriodDateTimeModel(BaseModel):
     start_at = models.DateTimeField(blank=True, null=True, db_index=True)
     end_at = models.DateTimeField(blank=True, null=True, db_index=True)
+
+    class Meta:
+        abstract = True
+
+
+class ColorModel(BaseModel):
+    color = models.CharField(max_length=7,
+                             validators=[color_validator],
+                             help_text="Formato hexadecimal (ej. #FF00AA)")
 
     class Meta:
         abstract = True
