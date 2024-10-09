@@ -30,8 +30,8 @@ class Task(BaseInfoModel, AuditModel, PeriodDateTimeModel):
                             default=TaskTypeEnum.PREVENTIVE)
     status = models.CharField(max_length=50, choices=TaskStatusEnum.choices,
                               default=TaskStatusEnum.TO_DO)
-    # priority = models.ForeignKey("common.Priority",
-    #                              on_delete=models.DO_NOTHING)
+    priority = models.ForeignKey("common.Priority", null=True,
+                                 on_delete=models.DO_NOTHING)
     created_by = models.ForeignKey("auth.User", related_name="created_tasks",
                                    on_delete=models.DO_NOTHING, null=False, editable=False)
     responsible = models.ForeignKey("auth.User", related_name="responsible_tasks",
