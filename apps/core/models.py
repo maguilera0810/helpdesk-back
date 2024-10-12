@@ -4,6 +4,7 @@ from datetime import datetime
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 
 from apps.core.validators import color_validator
 from resources.enums import StoragePathEnum
@@ -88,3 +89,17 @@ class StorageModel(BaseModel):
         attr = key + sufix
         if path := getattr(StoragePathEnum, attr, None):
             return path.replace("<env>", ENV).replace(f"<{key}_id>", str(self.pk))
+
+
+class SlugModel(BaseModel):
+
+    key_to_slug = "title"
+    code = models.SlugField(max_length=50, unique=True)
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        if not self.code and (key := getattr(self, self.key_to_slug, None)):
+            self.code = slugify(key)
+        super().save(*args, **kwargs)
