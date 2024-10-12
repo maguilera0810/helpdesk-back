@@ -94,12 +94,12 @@ class StorageModel(BaseModel):
 class SlugModel(BaseModel):
 
     key_to_slug = "title"
-    code = models.SlugField(max_length=50, unique=True)
+    key = models.SlugField(max_length=50, unique=True)
 
     class Meta:
         abstract = True
 
     def save(self, *args, **kwargs):
-        if not self.code and (key := getattr(self, self.key_to_slug, None)):
-            self.code = slugify(key)
+        if not self.key and (key := getattr(self, self.key_to_slug, None)):
+            self.key = slugify(key)
         super().save(*args, **kwargs)

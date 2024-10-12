@@ -29,7 +29,7 @@ class Role(BaseInfoModel, SlugModel, AuditModel):
                                          related_name="roles", blank=True)
 
     def __str__(self):
-        return self.name
+        return self.key
 
 
 class CustomPermission(BaseInfoModel, SlugModel, AuditModel):
@@ -37,7 +37,7 @@ class CustomPermission(BaseInfoModel, SlugModel, AuditModel):
     title = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
-        return self.name
+        return self.key
 
 
 AUTH_MODELS = [
