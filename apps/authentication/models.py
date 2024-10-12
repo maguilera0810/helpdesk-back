@@ -23,9 +23,10 @@ class Profile(BaseModel):
 class Role(BaseInfoModel, SlugModel, AuditModel):
 
     title = models.CharField(max_length=50, unique=True)
-    users = models.ManyToManyField("auth.User", related_name="roles")
+    users = models.ManyToManyField(
+        "auth.User", related_name="roles", blank=True)
     permissions = models.ManyToManyField("authentication.CustomPermission",
-                                         related_name="roles")
+                                         related_name="roles", blank=True)
 
     def __str__(self):
         return self.name
