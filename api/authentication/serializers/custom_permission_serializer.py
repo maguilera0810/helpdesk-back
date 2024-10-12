@@ -1,11 +1,10 @@
 # .\api\authentication\serializers\permission_serializer.py
-from django.contrib.auth.models import Permission
-
 from api.core.serializers.base_serializer import BaseSerializer
+from apps.authentication.models import CustomPermission
 
 
-class PermissionSerializer(BaseSerializer):
+class CustomPermissionSerializer(BaseSerializer):
 
     class Meta:
-        model = Permission
+        model = CustomPermission
         fields = "__all__"

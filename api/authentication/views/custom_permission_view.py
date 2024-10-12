@@ -1,16 +1,18 @@
-# .\api\authentication\views\group_view.py
-from api.authentication.serializers.group_serializer import GroupSerializer
-from api.authentication.services.group_service import GroupService
+# .\api\authentication\views\permission_view.py
+from api.authentication.serializers.custom_permission_serializer import \
+    CustomPermissionSerializer
+from api.authentication.services.custom_permission_service import \
+    CustomPermissionService
 from api.core.views.base_crud_view import BaseCRUDView
 from api.core.views.base_permission_view import IsAdminView
 from resources.decorators.swagger_decorators import custom_swagger_schema
 
 
-class GroupView(BaseCRUDView, IsAdminView):
-    """Group API View"""
+class CustomPermissionView(BaseCRUDView, IsAdminView):
+    """Permission API View"""
 
-    srv_class: type[GroupService] = GroupService
-    serial_class: type[GroupSerializer] = GroupSerializer
+    srv_class: type[CustomPermissionService] = CustomPermissionService
+    serial_class: type[CustomPermissionSerializer] = CustomPermissionSerializer
     schema = custom_swagger_schema(serial_class)
 
     @schema(action="list")
