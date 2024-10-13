@@ -25,14 +25,14 @@ class Role(BaseInfoModel, SlugModel, AuditModel):
     title = models.CharField(max_length=50, unique=True)
     users = models.ManyToManyField(
         "auth.User", related_name="roles", blank=True)
-    permissions = models.ManyToManyField("authentication.CustomPermission",
+    permissions = models.ManyToManyField("authentication.Permission",
                                          related_name="roles", blank=True)
 
     def __str__(self):
         return self.key
 
 
-class CustomPermission(BaseInfoModel, SlugModel, AuditModel):
+class Permission(BaseInfoModel, SlugModel, AuditModel):
 
     title = models.CharField(max_length=50, unique=True)
 
@@ -42,11 +42,11 @@ class CustomPermission(BaseInfoModel, SlugModel, AuditModel):
 
 AUTH_MODELS = [
     Profile,
-    CustomPermission,
+    Permission,
     Role,
 ]
 AUTH_MODEL_TYPES = Union[
     Profile,
-    CustomPermission,
+    Permission,
     Role,
 ]

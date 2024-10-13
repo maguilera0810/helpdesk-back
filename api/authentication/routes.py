@@ -6,7 +6,7 @@ from api.authentication.views.auth_view import (AuthAdminView, AuthDetailView,
                                                 AuthView,
                                                 CustomTokenObtainPairView)
 from api.authentication.views.custom_permission_view import \
-    CustomPermissionView
+    PermissionView
 from api.authentication.views.role_view import RoleView
 from api.core.routes import get_crud_route
 
@@ -16,7 +16,7 @@ urlpatterns = [
     # ROLE
     *get_crud_route("role", RoleView),
     # CUSTOM PERMISSION
-    *get_crud_route("custom-permission", CustomPermissionView),
+    *get_crud_route("permission", PermissionView),
     # USER
     path("user/info/",
          AuthDetailView.as_view({"get": "get_user_info"})),

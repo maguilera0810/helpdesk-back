@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from apps.authentication.models import CustomPermission
+from apps.authentication.models import Permission
 
 PERMISSIONS = [
     {"key": "dashboard_see", "title": "Ver Tablero"},
@@ -59,7 +59,7 @@ class Command(BaseCommand):
         for p in PERMISSIONS:
             key = p["key"]
             title = p["title"]
-            if permission := CustomPermission.objects.filter(key=key).first():
+            if permission := Permission.objects.filter(key=key).first():
                 if permission.title != title:
                     permission.title = title
                     msg = f"Permiso Actualizado: {key} - {title}"
@@ -67,7 +67,7 @@ class Command(BaseCommand):
                 else:
                     msg = f"Permiso ya existe: {key} - {title}"
             else:
-                permission = CustomPermission(key=key,
+                permission = Permission(key=key,
                                               title=title)
                 msg = f"Permiso Creeado: {key} - {title}"
                 permission.save()

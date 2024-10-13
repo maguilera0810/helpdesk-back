@@ -1,18 +1,18 @@
 # .\api\authentication\views\permission_view.py
 from api.authentication.serializers.custom_permission_serializer import \
-    CustomPermissionSerializer
+    PermissionSerializer
 from api.authentication.services.custom_permission_service import \
-    CustomPermissionService
+    PermissionService
 from api.core.views.base_crud_view import BaseCRUDView
 from api.core.views.base_permission_view import IsAdminView
 from resources.decorators.swagger_decorators import custom_swagger_schema
 
 
-class CustomPermissionView(BaseCRUDView, IsAdminView):
+class PermissionView(BaseCRUDView, IsAdminView):
     """Permission API View"""
 
-    srv_class: type[CustomPermissionService] = CustomPermissionService
-    serial_class: type[CustomPermissionSerializer] = CustomPermissionSerializer
+    srv_class: type[PermissionService] = PermissionService
+    serial_class: type[PermissionSerializer] = PermissionSerializer
     schema = custom_swagger_schema(serial_class)
 
     @schema(action="list")
