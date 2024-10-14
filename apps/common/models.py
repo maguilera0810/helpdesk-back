@@ -4,7 +4,7 @@ from typing import Union
 from django.db import models
 
 from apps.common.validators import color_validator
-from apps.core.models import BaseInfoModel, ColorModel
+from apps.core.models import BaseInfoModel, ColorModel, OrderModel
 
 
 class Tag(BaseInfoModel, ColorModel):
@@ -33,10 +33,9 @@ class Skill(BaseInfoModel):
     profiles = models.ManyToManyField("common.Skill", related_name="skills")
 
 
-class Priority(BaseInfoModel, ColorModel):
+class Priority(BaseInfoModel, ColorModel, OrderModel):
 
     icon = models.CharField(max_length=30, blank=True)
-    value = models.SmallIntegerField(unique=True)
 
 
 COMMON_MODELS = [

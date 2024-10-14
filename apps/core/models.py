@@ -68,6 +68,13 @@ class ColorModel(BaseModel):
         abstract = True
 
 
+class OrderModel(BaseModel):
+    order = models.SmallIntegerField(unique=True)
+
+    class Meta:
+        abstract = True
+
+
 class BaseInfoModel(BaseModel):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
