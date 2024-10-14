@@ -36,7 +36,6 @@ class Skill(BaseInfoModel):
 class Priority(BaseInfoModel, ColorModel, OrderModel):
 
     icon = models.TextField(blank=True)
-    group = models.CharField(max_length=50, blank=True)
 
 
 COMMON_MODELS = [

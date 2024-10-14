@@ -35,6 +35,7 @@ class Role(BaseInfoModel, SlugModel, AuditModel):
 class Permission(BaseInfoModel, SlugModel, AuditModel):
 
     title = models.CharField(max_length=50, unique=True)
+    group = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
         return self.key
