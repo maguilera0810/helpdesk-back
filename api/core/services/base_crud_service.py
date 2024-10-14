@@ -29,7 +29,7 @@ class BaseCRUDService(BaseService):
         excl_filters = excl_filters or {}
         query = (cls.model.objects.filter(**incl_filters)
                  .exclude(**excl_filters))
-        if isinstance(cls.model, OrderModel):
+        if issubclass(cls.model, OrderModel):
             query = query.order_by("order")
         return query
 
