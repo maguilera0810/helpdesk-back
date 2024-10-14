@@ -35,16 +35,19 @@ class Skill(BaseInfoModel):
 
 class Priority(BaseInfoModel, ColorModel, OrderModel):
 
-    icon = models.CharField(max_length=30, blank=True)
+    icon = models.TextField(blank=True)
+    group = models.CharField(max_length=50, blank=True)
 
 
 COMMON_MODELS = [
     Category,
+    Priority,
     Skill,
     Tag,
 ]
 COMMON_MODEL_TYPES = Union[
     Category,
+    Priority,
     Skill,
     Tag,
 ]
