@@ -2,15 +2,15 @@ from django.core.management.base import BaseCommand
 
 from apps.authentication.models import Permission
 
-group_dashboard = "support.dashboard"
-group_tracking = "support.tracking"
-group_task = "support.task"
-group_issue = "support.issue"
-group_user = "admin.user"
-group_role = "admin.role"
-group_profile = "settings.profile"
-group_category = "settings.category"
-group_priority = "settings.priority"
+group_dashboard = "support_dashboard"
+group_tracking = "support_tracking"
+group_task = "support_task"
+group_issue = "support_issue"
+group_user = "admin_user"
+group_role = "admin_role"
+group_profile = "settings_profile"
+group_category = "settings_category"
+group_priority = "settings_priority"
 
 PERMISSIONS = [
     {"group": group_dashboard, "key": "dashboard_see", "title": "Ver Tablero"},
