@@ -5,8 +5,7 @@ from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 from api.authentication.views.auth_view import (AuthAdminView, AuthDetailView,
                                                 AuthView,
                                                 CustomTokenObtainPairView)
-from api.authentication.views.custom_permission_view import \
-    PermissionView
+from api.authentication.views.permission_view import PermissionView
 from api.authentication.views.role_view import RoleView
 from api.core.routes import get_crud_route
 
