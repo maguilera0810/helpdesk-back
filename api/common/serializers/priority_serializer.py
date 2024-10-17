@@ -1,4 +1,4 @@
-# .\api\common\serializers\category_serializer.py
+# .\api\common\serializers\priority_serializer.py
 from django.db import transaction
 
 from api.core.serializers.base_serializer import BaseSerializer

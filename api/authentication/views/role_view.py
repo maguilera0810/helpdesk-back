@@ -1,4 +1,4 @@
-# .\api\authentication\views\group_view.py
+# .\api\authentication\views\role_view.py
 from api.authentication.serializers.role_serializer import RoleSerializer
 from api.authentication.services.role_service import RoleService
 from api.core.views.base_crud_view import BaseCRUDView

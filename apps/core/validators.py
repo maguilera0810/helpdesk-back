@@ -1,4 +1,4 @@
-# .\apps\common\validators.py
+# .\apps\core\validators.py
 from django.core.validators import RegexValidator
 
 color_validator = RegexValidator(regex=r"^#[0-9A-Fa-f]{6}$",
