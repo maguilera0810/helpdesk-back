@@ -20,8 +20,10 @@ class BaseCRUDView(viewsets.ViewSet):
         data = request.GET.dict()
         filters = FilterUtil.get_list_filters(data=data)
         items = self.srv_class.get_all(**filters)
-        serializer = self.serial_class(items, many=True,
-                                       context={"request": request})
+        if not (serial_class := kwargs.get("custom_serializer")):
+            serial_class = self.serial_class
+        serializer = serial_class(items, many=True,
+                                  context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
@@ -39,8 +41,10 @@ class BaseCRUDView(viewsets.ViewSet):
     def retrieve(self, request, id: int, *args, **kwargs):
         """Retrieve a specific item by ID"""
         if item := self.srv_class.get_one(id=id):
-            serializer = self.serial_class(item,
-                                           context={"request": request})
+            if not (serial_class := kwargs.get("custom_serializer")):
+                serial_class = self.serial_class
+            serializer = serial_class(item,
+                                      context={"request": request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({}, status=status.HTTP_404_NOT_FOUND)
 
