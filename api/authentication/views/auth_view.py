@@ -28,6 +28,7 @@ class AuthApiKeyView(ApiKeyPermissionView):
 class CustomTokenObtainPairView(ApiKeyPermissionView):
 
     def obtain_pair(self, request):
+
         serializer = CustomAuthTokenSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
