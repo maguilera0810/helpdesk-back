@@ -3,14 +3,54 @@ from copy import deepcopy
 
 from django.contrib.auth.models import User
 from django.db import transaction
-from rest_framework.serializers import (CharField, EmailField, ModelSerializer,
-                                        Serializer, ValidationError)
+from rest_framework.serializers import (CharField, ModelSerializer,
+                                        ValidationError)
 
 from api.core.serializers.base_serializer import BaseSerializer
 from apps.authentication.models import Profile
 from apps.authentication.serializers import ProfileSerializer
 from resources.enums import ValidatorMsgEnum
 from resources.validators.field_validator import FieldValidator
+
+
+class UserLightSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "email",
+        )
+
+
+class ProfileListSerializer(ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = (
+            "id",
+            "code",
+            "document",
+            "phone",
+            "is_available",
+        )
+
+
+class UserListSerializer(ModelSerializer):
+    profile = ProfileListSerializer()
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "profile",
+        )
 
 
 class UserPublicSerializer(ModelSerializer):
@@ -62,8 +102,6 @@ class UserCrudSerializer(BaseSerializer):
         return value
 
     def validate_password(self, value):
-        if value:  # TODO SOLO PARA PRUEBAS, QUITAR IF CUANDO ENTRE A PRODUCCION
-            return value
         if self.instance is None and not value:
             raise ValidationError(ValidatorMsgEnum.PASSWORD_REQUIRED)
         if value:
@@ -99,52 +137,3 @@ class UserCrudSerializer(BaseSerializer):
             user.set_password(password)
             user.save()
         return user
-
-
-class ProfilePublicSerializer(ModelSerializer):
-
-    class Meta:
-        model = Profile
-        fields = (
-            "document",
-            "document_type",
-            "phone",
-            "address",
-            "is_available")
-
-
-class UserAdminListSerializer(ModelSerializer):
-    profile = ProfilePublicSerializer()
-
-    class Meta:
-        model = User
-        fields = (
-            "id",
-            "username",
-            "first_name",
-            "last_name",
-            "email",
-            "profile",
-        )
-
-
-class CustomAuthTokenSerializer(Serializer):
-    email = EmailField(required=False)
-    document = CharField(required=False)
-    password = CharField(write_only=True)
-
-    def validate(self, attrs):
-        email = attrs.get("email")
-        document = attrs.get("document")
-        password = attrs.get("password")
-        if not email and not document:
-            raise ValidationError("Invalid credentials")
-        user = None
-        if email:
-            user = User.objects.filter(email=email).first()
-        elif document:
-            user = User.objects.filter(profile__document=document).first()
-        if user is None or not user.check_password(password):
-            raise ValidationError("Invalid credentials.")
-        attrs["user"] = user
-        return attrs

@@ -6,18 +6,17 @@ from django.db import transaction
 
 from api.authentication.serializers.auth_serializers import (
     ProfileCrudSerializer, UserCrudSerializer)
-from api.authentication.services.user_service import UserService
 from api.core.services.base_crud_service import BaseCRUDService
 from apps.authentication.models import Profile
 from resources.enums import ValidatorMsgEnum
 
 
-class AuthService(BaseCRUDService):
+class UserService(BaseCRUDService):
     model = User
 
     @classmethod
     @transaction.atomic
-    def create_user(cls, data: dict, request):
+    def create(cls, data: dict, request):
 
         user_serializer = UserCrudSerializer(data=data,
                                              partial=True,
@@ -36,7 +35,7 @@ class AuthService(BaseCRUDService):
 
     @classmethod
     @transaction.atomic
-    def update_user(cls, id: int, data: dict, request):
+    def update(cls, id: int, data: dict, request):
         """
         Updates a user and their profile information.
 
@@ -52,16 +51,18 @@ class AuthService(BaseCRUDService):
         if not user:
             return [ValidatorMsgEnum.USER_DOES_NOT_EXIST], None
         profile_data = data.pop("profile", None)
+        context = {"request": request}
         user_serializer = UserCrudSerializer(instance=user,
                                              data=data,
                                              partial=True,
-                                             context={'request': request})
+                                             context=context)
         if not user_serializer.is_valid():
             return user_serializer.errors, None
         user = user_serializer.save()
         if profile_data:
             profile_serializer = ProfileCrudSerializer(instance=user.profile,
                                                        data=profile_data,
+                                                       context=context,
                                                        partial=True)
             if not profile_serializer.is_valid():
                 return profile_serializer.errors, None
