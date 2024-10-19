@@ -12,6 +12,8 @@ urlpatterns = [
     # USER
     path("user/info/",
          UserView.as_view({"get": "get_user_info"})),
+    path("user/light/",
+         UserView.as_view({"get": "list_light"})),
     # path("user/register/",
     #    AuthApiKeyView.as_view({"post": "create"})), # NO SE USA
     *get_crud_route("user", UserView),
