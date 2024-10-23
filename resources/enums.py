@@ -12,27 +12,25 @@ class TaskPriorityEnum(TextChoices):
 
 
 class IssueStatusEnum(TextChoices):
-    RECEIVED = "received", _("received")
-    TASK_CREATED = "task_created", _("task_created")
-    REJECTED = "rejected", _("rejected")
-    TO_VALIDATE = "to_validate", _("to_validate")
-    COMPLETED = "completed", _("completed")
+    RECIBIDO = "recibido", _("recibido")
+    TAREA_CREADA = "tarea_creada", _("tarea_creada")
+    RECHAZADO = "rechazado", _("rechazado")
+    COMPLETADO = "completado", _("completado")
 
 
 class TaskStatusEnum(TextChoices):
-    TO_DO = "to_do", _("to_do")
-    IN_PROGRESS = "in_progress", _("in_progress")
-    BLOCKED = "blocked", _("blocked")
-    SCHEDULED = "scheduled", _("scheduled")
-    RESCHEDULED = "rescheduled", _("rescheduled")
-    EXECUTED = "executed", _("executed")
-    TO_VALIDATE = "to_validate", _("to_validate")
-    COMPLETED = "completed", _("completed")
+    POR_HACER = "por_hacer", _("por_hacer")
+    EN_EJECUCION = "en_ejecucion", _("en_ejecucion")
+    BLOQUEADO = "bloqueado", _("bloqueado")
+    PROGRAMADO = "programado", _("programado")
+    REPROGRAMADO = "reprogramado", _("reprogramado")
+    NO_EJECUTABLE = "no_ejecutable", _("no_ejecutable")
+    COMPLETADO = "completado", _("completado")
 
 
 class TaskTypeEnum(TextChoices):
-    EMERGENCY = "emergency", _("emergency")
-    PREVENTIVE = "preventive", _("preventive")
+    EMERGENTE = "emergente", _("emergente")
+    PREVENTIVO = "preventiva", _("preventiva")
 
 
 class CategoryTypeEnum(TextChoices):

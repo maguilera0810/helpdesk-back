@@ -30,9 +30,9 @@ class Task(BaseInfoModel, AuditModel, PeriodDateTimeModel):
     code = models.CharField(max_length=37, editable=False, blank=False,
                             db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
     type = models.CharField(max_length=50, choices=TaskTypeEnum.choices,
-                            default=TaskTypeEnum.PREVENTIVE)
-    status = models.ForeignKey("management.TaskStatus", null=True,
-                               on_delete=models.DO_NOTHING)
+                            default=TaskTypeEnum.PREVENTIVO)
+    status = models.CharField(max_length=50, choices=TaskStatusEnum.choices,
+                              default=TaskStatusEnum.POR_HACER)
     priority = models.ForeignKey("common.Priority", null=True,
                                  on_delete=models.DO_NOTHING)
     created_by = models.ForeignKey(MODEL_USER, related_name="created_tasks",
@@ -54,8 +54,8 @@ class Issue(BaseInfoModel, AuditModel):
                                 null=True, blank=True, related_name="issue")
     categories = models.ManyToManyField(MODEL_CATEGORY, blank=True,
                                         related_name="issues")
-    status = models.ForeignKey("management.IssueStatus", null=True,
-                               on_delete=models.DO_NOTHING)
+    status = models.CharField(max_length=50, choices=IssueStatusEnum.choices,
+                              default=IssueStatusEnum.RECIBIDO)
     created_by = models.ForeignKey(MODEL_USER, related_name="created_issues",
                                    on_delete=models.DO_NOTHING, editable=False)
     contact_email = models.CharField(max_length=100, blank=True)
