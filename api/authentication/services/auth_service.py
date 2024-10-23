@@ -6,6 +6,7 @@ from django.db import transaction
 
 from api.authentication.serializers.auth_serializers import (
     ProfileCrudSerializer, UserCrudSerializer)
+from api.authentication.services.user_service import UserService
 from api.core.services.base_crud_service import BaseCRUDService
 from apps.authentication.models import Profile
 from resources.enums import ValidatorMsgEnum
@@ -93,17 +94,6 @@ class AuthService(BaseCRUDService):
 
         user = serializer.save()
         return [], user
-
-    @classmethod
-    @transaction.atomic
-    def delete_user(cls, id: int):
-        user = User.objects.filter(id=id).first()
-        if not user:
-            return
-        profile = user.profile
-        profile.delete()
-        user.delete()
-        return True
 
     @classmethod
     @transaction.atomic

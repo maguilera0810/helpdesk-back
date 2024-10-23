@@ -1,3 +1,4 @@
+# .\apps\core\signals.py
 # DOCUMENTACION:
 # https://diegoamorin.com/django-signals/
 # https://docs.djangoproject.com/en/4.2/topics/signals/

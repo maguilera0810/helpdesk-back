@@ -1,10 +1,13 @@
+# .\api\management\serializers\task_serializer.py
 from django.db import transaction
 
 from api.core.serializers.base_serializer import BaseSerializer
 from apps.management.models import Task
+from rest_framework.serializers import PrimaryKeyRelatedField
 
 
 class TaskSerializer(BaseSerializer):
+    issue = PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Task

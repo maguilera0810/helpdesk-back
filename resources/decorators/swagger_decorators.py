@@ -1,3 +1,4 @@
+# .\resources\decorators\swagger_decorators.py
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.serializers import ModelSerializer
@@ -14,11 +15,17 @@ def custom_swagger_schema(serializer_class: ModelSerializer):
     model_name = model.__name__
     app_name = model._meta.app_label
 
-    def swagger_schema(action: str, responses: dict[int, any] = None, tag: str = ""):
+    def swagger_schema(action: str = None,
+                       description: str = None,
+                       responses: dict[int, any] = None,
+                       tag: str = None,
+                       custom_body: dict = None):
         if not responses:
             responses = {}
-        RESPONSES = {status.HTTP_200_OK: serializer_class(many=True) if action else serializer_class(),
-                     **_RESPONSES}
+        RESPONSES = {
+            **_RESPONSES,
+            status.HTTP_200_OK: serializer_class(many=True) if action == "list" else serializer_class(),
+        }
 
         def decorator(func):
             operation_description = ""
@@ -66,9 +73,11 @@ def custom_swagger_schema(serializer_class: ModelSerializer):
                     status.HTTP_400_BAD_REQUEST: RESPONSES[status.HTTP_400_BAD_REQUEST],
                     status.HTTP_404_NOT_FOUND: RESPONSES[status.HTTP_404_NOT_FOUND],
                 }
+            operation_description = description or operation_description
+
             swagger_auto_schema(operation_description=operation_description,
                                 tags=[tag or f"{app_name}.{model_name}"],
-                                request_body=request_body,
+                                request_body=custom_body or request_body,
                                 responses={**_responses, **responses})(func)
             return func
 

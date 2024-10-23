@@ -4,7 +4,9 @@ from datetime import datetime
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 
+from apps.core.validators import color_validator
 from resources.enums import StoragePathEnum
 
 ENV = settings.ENV
@@ -41,9 +43,33 @@ class AuditModel(BaseModel):
         return result
 
 
-class PeriodModel(BaseModel):
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
+class PeriodDateModel(BaseModel):
+    start_date = models.DateField(blank=True, null=True, db_index=True)
+    end_date = models.DateField(blank=True, null=True, db_index=True)
+
+    class Meta:
+        abstract = True
+
+
+class PeriodDateTimeModel(BaseModel):
+    start_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    end_at = models.DateTimeField(blank=True, null=True, db_index=True)
+
+    class Meta:
+        abstract = True
+
+
+class ColorModel(BaseModel):
+    color = models.CharField(max_length=7,
+                             validators=[color_validator],
+                             help_text="Formato hexadecimal (ej. #FF00AA)")
+
+    class Meta:
+        abstract = True
+
+
+class OrderModel(BaseModel):
+    order = models.SmallIntegerField(unique=True)
 
     class Meta:
         abstract = True
@@ -51,7 +77,7 @@ class PeriodModel(BaseModel):
 
 class BaseInfoModel(BaseModel):
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(blank=True)
 
     class Meta:
         abstract = True
@@ -70,3 +96,17 @@ class StorageModel(BaseModel):
         attr = key + sufix
         if path := getattr(StoragePathEnum, attr, None):
             return path.replace("<env>", ENV).replace(f"<{key}_id>", str(self.pk))
+
+
+class SlugModel(BaseModel):
+
+    key_to_slug = "title"
+    key = models.SlugField(max_length=50, unique=True)
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        if not self.key and (key := getattr(self, self.key_to_slug, None)):
+            self.key = slugify(key)
+        super().save(*args, **kwargs)

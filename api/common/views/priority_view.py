@@ -1,15 +1,15 @@
-from api.authentication.serializers.group_serializer import GroupSerializer
-from api.authentication.services.group_service import GroupService
+# .\api\common\views\priority_view.py
+from api.common.serializers.priority_serializer import PrioritySerializer
+from api.common.services.priority_service import PriorityService
 from api.core.views.base_crud_view import BaseCRUDView
-from api.core.views.base_permission_view import IsAdminView
+from api.core.views.base_permission_view import IsAuthenticatedView
 from resources.decorators.swagger_decorators import custom_swagger_schema
 
 
-class GroupView(BaseCRUDView, IsAdminView):
-    """Group API View"""
+class PriorityView(BaseCRUDView, IsAuthenticatedView):
 
-    srv_class: type[GroupService] = GroupService
-    serial_class: type[GroupSerializer] = GroupSerializer
+    srv_class: type[PriorityService] = PriorityService
+    serial_class: type[PrioritySerializer] = PrioritySerializer
     schema = custom_swagger_schema(serial_class)
 
     @schema(action="list")

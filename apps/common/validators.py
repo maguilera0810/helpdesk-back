@@ -1,6 +1,4 @@
-from django.core.validators import RegexValidator
+# .\apps\common\validators.py
+from apps.core.validators import color_validator
 
-
-color_validator = RegexValidator(regex=r"^#[0-9A-Fa-f]{6}$",
-                                 message="El color debe ser un valor hexadecimal válido",
-                                 code="invalid_color")
+__all__ = ["color_validator"]

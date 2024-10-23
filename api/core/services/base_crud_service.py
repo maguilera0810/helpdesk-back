@@ -7,6 +7,7 @@ from django.db import transaction
 from api.core.services.base_service import BaseService
 from apps.authentication.models import AUTH_MODEL_TYPES
 from apps.common.models import COMMON_MODEL_TYPES
+from apps.core.models import OrderModel
 from apps.management.models import MANAGEMENT_MODEL_TYPES
 from resources.helpers.file_helper import FileHelper
 
@@ -23,10 +24,16 @@ class BaseCRUDService(BaseService):
             return cls.model.objects.get(id=id)
 
     @classmethod
-    def get_all(cls, incl_filters: dict = None, excl_filters: dict = None):
+    def get_all(cls, incl_filters: dict = None, excl_filters: dict = None, order: list[str] = None):
         incl_filters = incl_filters or {}
         excl_filters = excl_filters or {}
-        return cls.model.objects.filter(**incl_filters).exclude(**excl_filters)
+        query = (cls.model.objects.filter(**incl_filters)
+                 .exclude(**excl_filters))
+        if order:
+            query = query.order_by(*order)
+        elif issubclass(cls.model, OrderModel):
+            query = query.order_by("order")
+        return query
 
     @classmethod
     def delete(cls, id: int):

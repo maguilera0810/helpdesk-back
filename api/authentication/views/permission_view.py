@@ -1,4 +1,5 @@
-from api.authentication.serializers.permission_serializer import \
+# .\api\authentication\views\custom_permission_view.py
+from api.authentication.serializers.custom_permission_serializer import \
     PermissionSerializer
 from api.authentication.services.permission_service import PermissionService
 from api.core.views.base_crud_view import BaseCRUDView
