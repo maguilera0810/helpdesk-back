@@ -5,8 +5,8 @@ from django.db import transaction
 from api.core.services.base_crud_service import BaseCRUDService
 from api.management.serializers.task_serializer import TaskSerializer
 from apps.management.models import Issue
-from resources.enums import (IssueStatusEnum, TaskPriorityEnum, TaskStatusEnum,
-                             TaskTypeEnum)
+from resources.enums import IssueStatusEnum, TaskTypeEnum
+
 
 class IssueService(BaseCRUDService):
     model = Issue

@@ -6,7 +6,6 @@ from django.db import models
 from apps.core.models import (AuditModel, BaseInfoModel, BaseModel, ColorModel,
                               PeriodDateModel, PeriodDateTimeModel,
                               StorageModel)
-from apps.management.validators import color_validator
 from resources.enums import (IssueStatusEnum, TaskPriorityEnum, TaskStatusEnum,
                              TaskTypeEnum)
 
@@ -68,14 +67,6 @@ class IssueFile(BaseInfoModel, AuditModel, StorageModel):
     file = models.CharField(max_length=200)
     created_by = models.ForeignKey(MODEL_USER, related_name="created_issue_files",
                                    on_delete=models.DO_NOTHING, editable=False)
-
-
-class TaskStatus(BaseInfoModel, ColorModel):
-    ...
-
-
-class IssueStatus(BaseInfoModel, ColorModel):
-    ...
 
 
 class ScheduledTask(BaseInfoModel, AuditModel, PeriodDateModel):
