@@ -6,6 +6,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 
+from apps import MODEL_USER
 from apps.core.validators import color_validator
 from resources.enums import StoragePathEnum
 
@@ -76,7 +77,7 @@ class OrderModel(BaseModel):
 
 
 class BaseInfoModel(BaseModel):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, blank=True)
     description = models.TextField(blank=True)
 
     class Meta:
@@ -110,3 +111,22 @@ class SlugModel(BaseModel):
         if not self.key and (key := getattr(self, self.key_to_slug, None)):
             self.key = slugify(key)
         super().save(*args, **kwargs)
+
+
+class CommentModel(BaseInfoModel, AuditModel):
+    order = models.PositiveSmallIntegerField(default=0)
+    files = models.JSONField(default=list)
+    created_by = models.ForeignKey(MODEL_USER, on_delete=models.DO_NOTHING,
+                                   editable=False)
+
+    class Meta:
+        abstract = True
+
+
+class FileModel(BaseInfoModel, AuditModel, StorageModel):
+    file = models.CharField(max_length=200)
+    created_by = models.ForeignKey(MODEL_USER, on_delete=models.DO_NOTHING,
+                                   editable=False)
+
+    class Meta:
+        abstract = True

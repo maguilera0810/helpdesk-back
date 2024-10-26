@@ -3,15 +3,12 @@ from typing import Union
 
 from django.db import models
 
+from apps import MODEL_CATEGORY, MODEL_ISSUE, MODEL_TASK, MODEL_USER
 from apps.core.models import (AuditModel, BaseInfoModel, BaseModel, ColorModel,
-                              PeriodDateModel, PeriodDateTimeModel,
-                              StorageModel)
+                              CommentModel, FileModel, PeriodDateModel,
+                              PeriodDateTimeModel, StorageModel)
 from resources.enums import (IssueStatusEnum, TaskPriorityEnum, TaskStatusEnum,
                              TaskTypeEnum)
-
-MODEL_TASK = "management.Task"
-MODEL_USER = "auth.User"
-MODEL_CATEGORY = "common.Category"
 
 
 class Plan(BaseInfoModel, PeriodDateModel):
@@ -61,10 +58,30 @@ class Issue(BaseInfoModel, AuditModel):
     contact_phone = models.CharField(max_length=10, blank=True)
 
 
-class IssueFile(BaseInfoModel, AuditModel, StorageModel):
-    issue = models.ForeignKey("management.Issue", on_delete=models.CASCADE,
-                              related_name="files")
-    file = models.CharField(max_length=200)
+class TaskComment(CommentModel):
+    task = models.ForeignKey(MODEL_TASK, related_name="comments",
+                             on_delete=models.CASCADE)
+    created_by = models.ForeignKey(MODEL_USER, related_name="task_comments",
+                                   on_delete=models.DO_NOTHING, editable=False)
+
+
+class IssueComment(CommentModel):
+    issue = models.ForeignKey(MODEL_ISSUE, related_name="comments",
+                              on_delete=models.CASCADE)
+    created_by = models.ForeignKey(MODEL_USER, related_name="issue_comments",
+                                   on_delete=models.DO_NOTHING, editable=False)
+
+
+class TaksFile(FileModel):
+    task = models.ForeignKey(MODEL_TASK, on_delete=models.CASCADE,
+                             related_name="issue_files")
+    created_by = models.ForeignKey(MODEL_USER, related_name="created_task_files",
+                                   on_delete=models.DO_NOTHING, editable=False)
+
+
+class IssueFile(FileModel):
+    issue = models.ForeignKey(MODEL_ISSUE, on_delete=models.CASCADE,
+                              related_name="issue_files")
     created_by = models.ForeignKey(MODEL_USER, related_name="created_issue_files",
                                    on_delete=models.DO_NOTHING, editable=False)
 
@@ -82,15 +99,6 @@ class ScheduledTask(BaseInfoModel, AuditModel, PeriodDateModel):
                                    on_delete=models.DO_NOTHING, editable=False)
     recurrence_rule = models.CharField(max_length=255)
     next_run_date = models.DateField()
-
-
-class TaskComment(AuditModel):
-    task = models.ForeignKey(MODEL_TASK, related_name="comments", on_delete=models.CASCADE,
-                             null=True, blank=True)
-    author = models.ForeignKey(MODEL_USER, related_name="comments", on_delete=models.DO_NOTHING,
-                               null=True, blank=True)
-    content = models.TextField(blank=True)
-    files = models.JSONField(default=list)
 
 
 class RequestingUnit(BaseInfoModel):
