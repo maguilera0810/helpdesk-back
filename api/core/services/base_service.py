@@ -13,7 +13,7 @@ class BaseService(ABC):
 
     @classmethod
     @abstractmethod
-    def get_all(cls, incl_filters: dict = None, excl_filters: dict = None):
+    def get_all(cls, incl_filters: dict = None, excl_filters: dict = None, order: list[str] = None):
         ...
 
     @classmethod
