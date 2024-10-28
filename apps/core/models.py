@@ -114,7 +114,6 @@ class SlugModel(BaseModel):
 
 
 class CommentModel(BaseInfoModel, AuditModel):
-    order = models.PositiveSmallIntegerField(default=0)
     files = models.JSONField(default=list)
     created_by = models.ForeignKey(MODEL_USER, on_delete=models.DO_NOTHING,
                                    editable=False)
