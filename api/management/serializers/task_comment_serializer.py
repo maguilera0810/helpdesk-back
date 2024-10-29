@@ -7,7 +7,6 @@ from apps.management.models import TaskComment
 
 
 class TaskCommentSerializer(BaseSerializer):
-    created_by = UserLightSerializer()
 
     class Meta:
         model = TaskComment
@@ -24,3 +23,10 @@ class TaskCommentSerializer(BaseSerializer):
             request = self.context.get("request")
             self.validated_data["created_by"] = request.user
         return super().save(**kwargs)
+
+    def to_representation(self, instance):
+        # Usa UserLightSerializer para la representación en las respuestas
+        representation = super().to_representation(instance)
+        representation["created_by"] = UserLightSerializer(
+            instance.created_by).data
+        return representation
