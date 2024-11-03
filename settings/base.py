@@ -42,6 +42,7 @@ DJANGO_APPS = [
 ]
 CUSTOM_APPS = [
     "apps.authentication",
+    "apps.analytics",
     "apps.common",
     "apps.core",
     "apps.management",
