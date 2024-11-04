@@ -1,4 +1,4 @@
-# .\api\common\routes.py
+# .\api\analytics\routes.py
 from django.urls import path
 
 from api.analytics.views.data_analytics_view import DataAnalyticView

@@ -1,4 +1,4 @@
-# .\api\authentication\views\auth_view.py
+# .\api\authentication\views\user_view.py
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken

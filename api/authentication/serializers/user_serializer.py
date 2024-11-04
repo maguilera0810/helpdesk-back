@@ -1,4 +1,4 @@
-# .\api\authentication\serializers\auth_serializers.py
+# .\api\authentication\serializers\user_serializer.py
 from copy import deepcopy
 
 from django.contrib.auth.models import User
