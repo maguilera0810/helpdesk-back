@@ -43,12 +43,12 @@ class DataAnalyticService:
         for category_id, value in rows:
             if category := categories.get(category_id):
                 res.append({**category,
-                            "count": value})
+                            "value": value})
             elif category_id == -1:
                 res.append({
                     "id": category_id,
                     "title": "N/A",
-                    "count": value})
+                    "value": value})
         return res
 
     def get_status(self):
