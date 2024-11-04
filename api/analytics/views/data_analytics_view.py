@@ -2,16 +2,15 @@
 from rest_framework import status
 from rest_framework.response import Response
 
-from api.analytics.services.kpi_service import KPIService
+from api.analytics.services.data_analytics_service import DataAnalyticService
 from api.core.views.base_permission_view import IsAuthenticatedView
 
 
-class KPIView(IsAuthenticatedView):
-    """KPI API View"""
+class DataAnalyticView(IsAuthenticatedView):
 
-    def get_kpis(self, request):
+    def get_all(self, request):
         data = request.GET
         period = data.get("period", "today")
-        srv = KPIService(period=period)
-        data = srv.get_kpis()
+        srv = DataAnalyticService(period=period)
+        data = srv.get_all()
         return Response(data, status=status.HTTP_200_OK)
