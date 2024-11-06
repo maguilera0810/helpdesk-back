@@ -1,4 +1,4 @@
-# .\api\management\serializers\task_serializer.py
+# .\api\management\serializers\task_comment_serializer.py
 from django.db import transaction
 
 from api.authentication.serializers.user_serializer import UserLightSerializer

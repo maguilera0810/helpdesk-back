@@ -43,3 +43,31 @@ class CursorUtil:
         """
         return cls.execute(query=query,
                            params=[period])
+
+    @classmethod
+    def get_task_categories(cls, period: PeriodEnum):
+        query = """
+        select
+            tcv.category_id,
+            tcv.count 
+        from
+            task_categories_view tcv
+        where
+            tcv."period" = %s;
+        """
+        return cls.execute(query=query,
+                           params=[period])
+
+    @classmethod
+    def get_issue_categories(cls, period: PeriodEnum):
+        query = """
+        select
+            icv.category_id,
+            icv.count
+        from
+            issue_categories_view icv
+        where
+            icv."period" = %s;
+        """
+        return cls.execute(query=query,
+                           params=[period])

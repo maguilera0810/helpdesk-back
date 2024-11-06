@@ -1,4 +1,4 @@
-# .\apps\authentication\management\commands\create_permissions.py
+# .\apps\analytics\management\commands\create_task_categories_views.py
 from django.core.management.base import BaseCommand
 
 from resources.utils.cursor_util import CursorUtil as Cursor

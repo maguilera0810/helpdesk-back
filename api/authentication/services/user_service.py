@@ -1,4 +1,4 @@
-# .\api\authentication\services\auth_service.py
+# .\api\authentication\services\user_service.py
 from dataclasses import asdict
 
 from django.contrib.auth.models import User
