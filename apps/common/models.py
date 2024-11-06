@@ -4,7 +4,7 @@ from typing import Union
 from django.db import models
 
 from apps.common.validators import color_validator
-from apps.core.models import BaseInfoModel, ColorModel, OrderModel
+from apps.core.models import AuditModel, BaseInfoModel, ColorModel, OrderModel
 
 
 class Tag(BaseInfoModel, ColorModel):
@@ -38,15 +38,28 @@ class Priority(BaseInfoModel, ColorModel, OrderModel):
     icon = models.TextField(blank=True)
 
 
+class Location(BaseInfoModel, AuditModel):
+
+    postal_code = models.CharField(max_length=20, blank=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True,
+                                   null=True, help_text="Coordenada de latitud.")
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True,
+                                    null=True, help_text="Coordenada de longitud.")
+    address = models.CharField(max_length=255,
+                               help_text="Dirección completa de la ubicación.")
+
+
 COMMON_MODELS = [
     Category,
     Priority,
+    Location,
     Skill,
     Tag,
 ]
 COMMON_MODEL_TYPES = Union[
     Category,
     Priority,
+    Location,
     Skill,
     Tag,
 ]

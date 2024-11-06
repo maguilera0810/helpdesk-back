@@ -43,6 +43,18 @@ class Task(BaseInfoModel, AuditModel, PeriodDateTimeModel):
                                         related_name="tasks")
 
 
+class TaskIssueLocation(BaseModel):
+    task = models.OneToOneField("management.Task", related_name="location",
+                                on_delete=models.DO_NOTHING, null=True)
+    issue = models.OneToOneField("management.Issue", related_name="location",
+                                 on_delete=models.DO_NOTHING, null=True)
+    location = models.ForeignKey("common.Location",
+                                 on_delete=models.DO_NOTHING, null=False)
+
+    class Meta:
+        unique_together = ("task", "issue")
+
+
 class Issue(BaseInfoModel, AuditModel):
     code = models.CharField(max_length=38, editable=False, blank=False,
                             db_index=True,  unique=True, help_text="max_length= len(model_name) + 33")
