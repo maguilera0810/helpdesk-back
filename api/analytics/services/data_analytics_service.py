@@ -11,8 +11,8 @@ class DataAnalyticService:
 
     def __init__(self, period: PeriodEnum):
         self.period = period
-        self.status_taks = defaultdict(int)
-        self.status_issues = defaultdict(int)
+        self.task_status = defaultdict(int)
+        self.issues_status = defaultdict(int)
 
     def __set_categories(self, category_ids):
         cats = (Category.objects.filter(id__in=category_ids)
@@ -53,22 +53,22 @@ class DataAnalyticService:
 
     def get_status(self):
         return {
-            "status_taks": self.get_task_status(),
-            "status_issues": self.get_issue_status(),
+            "task_status": self.get_task_status(),
+            "issue_status": self.get_issue_status(),
         }
 
     def get_task_status(self):
         for i in TaskStatusEnum.values:
-            self.status_taks[i]
+            self.task_status[i]
         rows = Cursor.get_task_status(period=self.period)
         for status, value in rows:
-            self.status_taks[status] = value
-        return self.status_taks
+            self.task_status[status] = value
+        return self.task_status
 
     def get_issue_status(self):
         for i in IssueStatusEnum.values:
-            self.status_issues[i]
+            self.issues_status[i]
         rows = Cursor.get_issue_status(period=self.period)
         for status, value in rows:
-            self.status_issues[status] = value
-        return self.status_issues
+            self.issues_status[status] = value
+        return self.issues_status
