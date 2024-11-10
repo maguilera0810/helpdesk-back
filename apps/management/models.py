@@ -41,6 +41,8 @@ class Task(BaseInfoModel, AuditModel, PeriodDateTimeModel):
                              on_delete=models.DO_NOTHING, null=True)
     categories = models.ManyToManyField(MODEL_CATEGORY, blank=True,
                                         related_name="tasks")
+    location = models.ForeignKey("common.Location",
+                                 on_delete=models.DO_NOTHING, null=True)
 
 
 class Issue(BaseInfoModel, AuditModel):
@@ -56,6 +58,8 @@ class Issue(BaseInfoModel, AuditModel):
                                    on_delete=models.DO_NOTHING, editable=False)
     contact_email = models.CharField(max_length=100, blank=True)
     contact_phone = models.CharField(max_length=10, blank=True)
+    location = models.ForeignKey("common.Location",
+                                 on_delete=models.DO_NOTHING, null=True)
 
 
 class TaskComment(CommentModel):
