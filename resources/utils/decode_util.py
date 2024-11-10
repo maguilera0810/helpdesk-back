@@ -1,5 +1,6 @@
 # .\resources\utils\decode_util.py
 import base64
+import hashlib
 import string
 from contextlib import suppress
 from secrets import choice
@@ -12,16 +13,32 @@ from django.utils.text import slugify
 class DecodeUtil:
 
     @staticmethod
-    def base64_to_text(text: str) -> str:
-        base64_bytes = text.encode("ascii")
-        message_bytes = base64.b64decode(base64_bytes)
-        return message_bytes.decode("ascii")
+    def md5(text: str):
+        return hashlib.md5(text.encode()).hexdigest()
 
     @staticmethod
-    def text_to_base64(text: str) -> str:
-        base64_bytes = text.encode("ascii")
-        message_bytes = base64.b64encode(base64_bytes)
-        return message_bytes.decode("ascii")
+    def sha1(text: str):
+        return hashlib.sha1(text.encode()).hexdigest()
+
+    @staticmethod
+    def sha224(text: str):
+        return hashlib.sha224(text.encode()).hexdigest()
+
+    @staticmethod
+    def sha256(text: str):
+        return hashlib.sha256(text.encode()).hexdigest()
+
+    @staticmethod
+    def sha512(text: str):
+        return hashlib.sha512(text.encode()).hexdigest()
+
+    @staticmethod
+    def base64_encode(text: str):
+        return base64.b64encode(text.encode()).decode()
+
+    @staticmethod
+    def base64_decode(encoded_text):
+        return base64.b64decode(encoded_text.encode()).decode()
 
     @staticmethod
     def generate_random_code(length: int = 50, upper: bool = False) -> str:
