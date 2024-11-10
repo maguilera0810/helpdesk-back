@@ -42,10 +42,10 @@ class Priority(BaseInfoModel, ColorModel, OrderModel):
 class Location(BaseInfoModel, AuditModel):
 
     postal_code = models.CharField(max_length=20, blank=True)
-    lat = models.DecimalField(max_digits=9, decimal_places=6, blank=True,
+    lat = models.DecimalField(max_digits=19, decimal_places=16, blank=True,
                               null=True, help_text="Coordenada de latitud.")
-    long = models.DecimalField(max_digits=9, decimal_places=6, blank=True,
-                               null=True, help_text="Coordenada de longitud.")
+    lng = models.DecimalField(max_digits=19, decimal_places=16, blank=True,
+                              null=True, help_text="Coordenada de longitud.")
     address = models.CharField(max_length=255,
                                help_text="Dirección completa de la ubicación.")
 
