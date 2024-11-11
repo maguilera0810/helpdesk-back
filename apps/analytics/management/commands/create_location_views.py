@@ -1,25 +1,15 @@
 # .\apps\analytics\management\commands\create_status_views.py
 from django.core.management.base import BaseCommand
 
+from resources.enums import PeriodEnum
 from resources.utils.cursor_util import CursorUtil as Cursor
 
 alias_filter = {
     "t": "<<main_filters>>",
     "inner_t": "<<inner_filters>>",
 }
-period_filters = {
-    "today": " <<alias>>.created_at :: date = CURRENT_DATE ",
-    "yesterday": " <<alias>>.created_at :: date = CURRENT_DATE - INTERVAL '1 day' ",
-    "last_7_days": " <<alias>>.created_at >= CURRENT_DATE - INTERVAL '7 days' ",
-    "last_30_days": " <<alias>>.created_at >= CURRENT_DATE - INTERVAL '30 days' ",
-    "last_year": " <<alias>>.created_at >= CURRENT_DATE - INTERVAL '1 year' ",
-    "current_month": " <<alias>>.created_at >= date_trunc('month', CURRENT_DATE) ",
-    "current_year": " <<alias>>.created_at >= date_trunc('year', CURRENT_DATE) ",
-    "all_time": " true ",
-    # "2_days_ago": " <<alias>>.created_at :: date = CURRENT_DATE - INTERVAL '2 days' ",
-    # "last_14_days": " <<alias>>.created_at >= CURRENT_DATE - INTERVAL '14 days' ",
-    # "last_3_months": " <<alias>>.created_at >= CURRENT_DATE - INTERVAL '3 months' ",
-}
+period_filters = {k: v for k, v in PeriodEnum.choices}
+
 
 join_clause = " UNION ALL "
 task_base_query = "create or replace view location_task_preriods_view as <<content>>;"

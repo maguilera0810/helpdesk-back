@@ -1,18 +1,11 @@
 # .\apps\analytics\management\commands\create_status_views.py
 from django.core.management.base import BaseCommand
 
+from resources.enums import PeriodEnum
 from resources.utils.cursor_util import CursorUtil as Cursor
 
-period_filters = {
-    "today": " updated_at :: date = CURRENT_DATE ",
-    "yesterday": " updated_at :: date = CURRENT_DATE - INTERVAL '1 day' ",
-    "last_7_days": " updated_at >= CURRENT_DATE - INTERVAL '7 days' ",
-    "last_30_days": " updated_at >= CURRENT_DATE - INTERVAL '30 days' ",
-    "last_year": " updated_at >= CURRENT_DATE - INTERVAL '1 year' ",
-    "current_month": " updated_at >= date_trunc('month', CURRENT_DATE) ",
-    "current_year": " updated_at >= date_trunc('year', CURRENT_DATE) ",
-    "all_time": " true ",
-}
+period_filters = {k: v.replace("<<alias>>.", "").replace("created_at", "updated_at")
+                  for k, v in PeriodEnum.choices}
 join_clause = " UNION ALL "
 
 task_base_query = "CREATE OR REPLACE VIEW task_status_periods_view AS <<content>>;"
