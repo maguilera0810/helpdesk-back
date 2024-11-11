@@ -11,7 +11,7 @@ from resources.utils.filter_util import FilterUtil
 class DataAnalyticView(IsAuthenticatedView):
 
     def get_all(self, request):
-        data = FilterUtil.parser_queryparams(request.GET, 2)
+        data = FilterUtil.parser_queryparams(request.GET)
         period = data.get("period", PeriodEnum.today)
         srv = DataAnalyticService(period=period)
         data = srv.get_all()
