@@ -8,16 +8,8 @@ alias_filter = {
     "t": "<<main_filters>>",
     "inner_t": "<<inner_filters>>",
 }
-period_filters = {
-    PeriodEnum.today: " <<alias>>.created_at :: date = CURRENT_DATE ",
-    PeriodEnum.yesterday: " <<alias>>.created_at :: date = CURRENT_DATE - INTERVAL '1 day' ",
-    PeriodEnum.last_7_days: " <<alias>>.created_at >= CURRENT_DATE - INTERVAL '7 days' ",
-    PeriodEnum.last_30_days: " <<alias>>.created_at >= CURRENT_DATE - INTERVAL '30 days' ",
-    PeriodEnum.last_year: " <<alias>>.created_at >= CURRENT_DATE - INTERVAL '1 year' ",
-    PeriodEnum.current_month: " <<alias>>.created_at >= date_trunc('month', CURRENT_DATE) ",
-    PeriodEnum.current_year: " <<alias>>.created_at >= date_trunc('year', CURRENT_DATE) ",
-    PeriodEnum.all_time: " true ",
-}
+period_filters = {k: v for k, v in PeriodEnum.choices}
+
 
 join_clause = " UNION ALL "
 task_base_query = "create or replace view location_task_preriods_view as <<content>>;"

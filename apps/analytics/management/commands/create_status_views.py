@@ -4,16 +4,8 @@ from django.core.management.base import BaseCommand
 from resources.enums import PeriodEnum
 from resources.utils.cursor_util import CursorUtil as Cursor
 
-period_filters = {
-    PeriodEnum.today: " updated_at :: date = CURRENT_DATE ",
-    PeriodEnum.yesterday: " updated_at :: date = CURRENT_DATE - INTERVAL '1 day' ",
-    PeriodEnum.last_7_days: " updated_at >= CURRENT_DATE - INTERVAL '7 days' ",
-    PeriodEnum.last_30_days: " updated_at >= CURRENT_DATE - INTERVAL '30 days' ",
-    PeriodEnum.last_year: " updated_at >= CURRENT_DATE - INTERVAL '1 year' ",
-    PeriodEnum.current_month: " updated_at >= date_trunc('month', CURRENT_DATE) ",
-    PeriodEnum.current_year: " updated_at >= date_trunc('year', CURRENT_DATE) ",
-    PeriodEnum.all_time: " true ",
-}
+period_filters = {k: v.replace("<<alias>>.", "").replace("created_at", "updated_at")
+                  for k, v in PeriodEnum.choices}
 join_clause = " UNION ALL "
 
 task_base_query = "CREATE OR REPLACE VIEW task_status_periods_view AS <<content>>;"

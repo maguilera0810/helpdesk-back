@@ -86,11 +86,11 @@ class StoragePathEnum(TextChoices):
 
 
 class PeriodEnum(TextChoices):
-    today = "today", _("today")
-    yesterday = "yesterday", _("yesterday")
-    last_7_days = "last_7_days", _("last_7_days")
-    last_30_days = "last_30_days", _("last_30_days")
-    last_year = "last_year", _("last_year")
-    current_month = "current_month", _("current_month")
-    current_year = "current_year", _("current_year")
-    all_time = "all_time", _("all_time")
+    today = "today", " <<alias>>.created_at :: date = CURRENT_DATE "
+    yesterday = "yesterday", " <<alias>>.created_at :: date = CURRENT_DATE - INTERVAL '1 day' "
+    last_7_days = "last_7_days", " <<alias>>.created_at >= CURRENT_DATE - INTERVAL '7 days' "
+    last_30_days = "last_30_days", " <<alias>>.created_at >= CURRENT_DATE - INTERVAL '30 days' "
+    last_year = "last_year", " <<alias>>.created_at >= CURRENT_DATE - INTERVAL '1 year' "
+    current_month = "current_month", " <<alias>>.created_at >= date_trunc('month', CURRENT_DATE) "
+    current_year = "current_year", " <<alias>>.created_at >= date_trunc('year', CURRENT_DATE) "
+    all_time = "all_time", " true "

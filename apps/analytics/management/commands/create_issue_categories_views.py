@@ -4,16 +4,8 @@ from django.core.management.base import BaseCommand
 from resources.enums import PeriodEnum
 from resources.utils.cursor_util import CursorUtil as Cursor
 
-period_filters = {
-    PeriodEnum.today: " mi.created_at :: date = CURRENT_DATE ",
-    PeriodEnum.yesterday: " mi.created_at :: date = CURRENT_DATE - INTERVAL '1 day' ",
-    PeriodEnum.last_7_days: " mi.created_at >= CURRENT_DATE - INTERVAL '7 days' ",
-    PeriodEnum.last_30_days: " mi.created_at >= CURRENT_DATE - INTERVAL '30 days' ",
-    PeriodEnum.last_year: " mi.created_at >= CURRENT_DATE - INTERVAL '1 year' ",
-    PeriodEnum.current_month: " mi.created_at >= date_trunc('month', CURRENT_DATE) ",
-    PeriodEnum.current_year: " mi.created_at >= date_trunc('year', CURRENT_DATE) ",
-    PeriodEnum.all_time: " true ",
-}
+period_filters = {k: v.replace("<<alias>>", "mi")
+                  for k, v in PeriodEnum.choices}
 
 
 base_query = "CREATE OR REPLACE VIEW issue_categories_view AS <<content>>;"
