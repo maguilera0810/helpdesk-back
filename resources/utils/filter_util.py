@@ -5,7 +5,7 @@ from resources.utils.crypto_util import CryptoUtil
 class FilterUtil:
 
     @classmethod
-    def get_list_filters(cls, data: dict[str, str], n: int = 2) -> dict[str, dict]:
+    def get_list_filters(cls, data: dict[str, str], n: int = 1) -> dict[str, dict]:
 
         data = cls.parser_queryparams(data, n)
 
@@ -33,7 +33,7 @@ class FilterUtil:
         }
 
     @classmethod
-    def parser_queryparams(cls, data: dict[str, str], n: int = 2) -> dict[str, dict]:
+    def parser_queryparams(cls, data: dict[str, str], n: int = 1) -> dict[str, dict]:
         if not data:
             return {}
         if q := data.get("q"):
