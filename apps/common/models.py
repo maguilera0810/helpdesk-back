@@ -41,12 +41,12 @@ class Priority(BaseInfoModel, ColorModel, OrderModel):
 
 class Location(BaseInfoModel, AuditModel):
 
-    postal_code = models.CharField(max_length=20, blank=True)
     lat = models.DecimalField(max_digits=19, decimal_places=16, blank=True,
                               null=True, help_text="Coordenada de latitud.")
     lng = models.DecimalField(max_digits=19, decimal_places=16, blank=True,
                               null=True, help_text="Coordenada de longitud.")
-    address = models.CharField(max_length=255,
+    postal_code = models.CharField(max_length=20, blank=True)
+    address = models.CharField(max_length=255, blank=True,
                                help_text="Dirección completa de la ubicación.")
 
 
