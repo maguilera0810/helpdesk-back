@@ -1,17 +1,18 @@
 # .\apps\analytics\management\commands\create_task_categories_views.py
 from django.core.management.base import BaseCommand
 
+from resources.enums import PeriodEnum
 from resources.utils.cursor_util import CursorUtil as Cursor
 
 period_filters = {
-    "today": " mt.created_at :: date = CURRENT_DATE ",
-    "yesterday": " mt.created_at :: date = CURRENT_DATE - INTERVAL '1 day' ",
-    "last_7_days": " mt.created_at >= CURRENT_DATE - INTERVAL '7 days' ",
-    "last_30_days": " mt.created_at >= CURRENT_DATE - INTERVAL '30 days' ",
-    "last_year": " mt.created_at >= CURRENT_DATE - INTERVAL '1 year' ",
-    "current_month": " mt.created_at >= date_trunc('month', CURRENT_DATE) ",
-    "current_year": " mt.created_at >= date_trunc('year', CURRENT_DATE) ",
-    "all_time": " true ",
+    PeriodEnum.today: " mt.created_at :: date = CURRENT_DATE ",
+    PeriodEnum.yesterday: " mt.created_at :: date = CURRENT_DATE - INTERVAL '1 day' ",
+    PeriodEnum.last_7_days: " mt.created_at >= CURRENT_DATE - INTERVAL '7 days' ",
+    PeriodEnum.last_30_days: " mt.created_at >= CURRENT_DATE - INTERVAL '30 days' ",
+    PeriodEnum.last_year: " mt.created_at >= CURRENT_DATE - INTERVAL '1 year' ",
+    PeriodEnum.current_month: " mt.created_at >= date_trunc('month', CURRENT_DATE) ",
+    PeriodEnum.current_year: " mt.created_at >= date_trunc('year', CURRENT_DATE) ",
+    PeriodEnum.all_time: " true ",
 }
 
 base_query = "CREATE OR REPLACE VIEW task_categories_view AS <<content>>;"
