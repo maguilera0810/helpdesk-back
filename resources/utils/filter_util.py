@@ -1,11 +1,13 @@
 # .\resources\utils\filter_util.py
+from resources.utils.crypto_util import CryptoUtil
+
 
 class FilterUtil:
 
-    @staticmethod
-    def get_list_filters(data: dict[str, str]) -> dict[str, dict]:
-        if not data:
-            return {}
+    @classmethod
+    def get_list_filters(cls, data: dict[str, str], n: int = 2) -> dict[str, dict]:
+
+        data = cls.parser_queryparams(data, n)
 
         incl_prefix, excl_prefix, order_key, list_suffix = "incl_", "excl_", "order_by", "__in"
         incl_filters, excl_filters, order = {}, {}, []
@@ -29,3 +31,11 @@ class FilterUtil:
             "excl_filters": excl_filters,
             "order": order,
         }
+
+    @classmethod
+    def parser_queryparams(cls, data: dict[str, str], n: int = 2) -> dict[str, dict]:
+        if not data:
+            return {}
+        if q := data.get("q"):
+            data = CryptoUtil.decode_base64(q, n)
+        return data

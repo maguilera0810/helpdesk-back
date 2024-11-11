@@ -17,8 +17,7 @@ class BaseCRUDView(viewsets.ViewSet):
 
     def list(self, request, *args, **kwargs):
         """List all items"""
-        data = request.GET.dict()
-        filters = FilterUtil.get_list_filters(data=data)
+        filters = FilterUtil.get_list_filters(request.GET, 2)
         items = self.srv_class.get_all(**filters)
         if not (serial_class := kwargs.get("custom_serializer")):
             serial_class = self.serial_class

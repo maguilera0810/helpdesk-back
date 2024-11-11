@@ -227,3 +227,5 @@ CACHES = {
         "LOCATION": "helpdesk-cache",
     }
 }
+
+PRIVATE_KEY = config("PRIVATE_KEY").replace("\\n", "\n")
